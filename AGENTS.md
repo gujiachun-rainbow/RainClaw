@@ -1,4 +1,4 @@
-本项目严格遵循 obra/superpowers 敏捷开发方法论。
+本项目严格遵循 superpowers 敏捷开发方法论。
 
 绝对禁令：严禁未经设计直接写代码，必须严格执行 brainstorming → using-git-worktrees → writing-plans → test-driven-development → code-review → finish-branch 的生命周期闭环。
 
