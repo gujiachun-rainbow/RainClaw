@@ -1,0 +1,8 @@
+{
+  "server": "smtp.qq.com",
+  "port": 465,
+  "username": "767724839@qq.com",
+  "password": "vufotjapjujjbeih",
+  "emailFrom": "767724839@qq.com",
+  "useTLS": true
+}
