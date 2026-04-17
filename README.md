@@ -87,24 +87,21 @@ git clone https://github.com/yourusername/RainClaw.git
 cd RainClaw
 ```
 
-2. **创建虚拟环境**
-
-```bash
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
-```
-
-3. **安装依赖**
+2. **创建虚拟环境并安装依赖**
 
 ```bash
 cd rainclaw/backend
+# 使用 uv 创建虚拟环境
+uv venv
+# Windows
+.venv\Scripts\activate
+# Linux/Mac
+source .venv/bin/activate
+# 安装依赖
 pip install -e .
 ```
 
-4. **配置环境变量**
+3. **配置环境变量**
 
 创建 `.env` 文件，添加以下配置：
 
@@ -122,7 +119,7 @@ CONTEXT_WINDOW=128000
 MAX_TOKENS=4096
 ```
 
-5. **启动服务**
+4. **启动服务**
 
 ```bash
 uvicorn main:app --reload

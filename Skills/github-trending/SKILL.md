@@ -43,10 +43,10 @@ python3 <skill-path>/scripts/fetch_trending.py <since> <language>
 示例：
 ```bash
 # 获取每日热门（全部语言）
-python3 /home/scienceclaw/3ebjuci3jJWGDrs7NDr6ts/skills/github-trending/scripts/fetch_trending.py daily
+python3 /home/rainclaw/3ebjuci3jJWGDrs7NDr6ts/skills/github-trending/scripts/fetch_trending.py daily
 
 # 获取每周 Python 热门
-python3 /home/scienceclaw/3ebjuci3jJWGDrs7NDr6ts/skills/github-trending/scripts/fetch_trending.py weekly python
+python3 /home/rainclaw/3ebjuci3jJWGDrs7NDr6ts/skills/github-trending/scripts/fetch_trending.py weekly python
 ```
 
 脚本会输出 JSON 数组，每个元素包含：

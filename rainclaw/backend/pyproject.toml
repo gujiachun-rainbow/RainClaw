@@ -1,7 +1,7 @@
 [project]
 name = "rainclaw"
 version = "0.1.0"
-description = "Add your description here"
+description = "RainClaw Agent Backend"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -28,3 +28,7 @@ dependencies = [
     "langchain-community==0.4.1",
     "langchain-openai==1.1.13",
 ]
+
+[tool.setuptools.packages.find]
+where = [".."]  # 搜索父目录
+include = ["backend*"]  # 包含 backend 包

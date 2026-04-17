@@ -21,7 +21,7 @@ description: "通过 SMTP 协议发送邮件。当用户要求发送邮件、发
 调用脚本发送邮件：
 
 ```bash
-python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
+python /home/rainclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
   --to "recipient@example.com" \
   --subject "邮件主题" \
   --body "邮件内容"
@@ -30,7 +30,7 @@ python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_e
 ### 2. 发送 HTML 邮件
 
 ```bash
-python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
+python /home/rainclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
   --to "recipient@example.com" \
   --subject "HTML邮件" \
   --body "<h1>Hello</h1><p>这是HTML邮件</p>" \
@@ -40,7 +40,7 @@ python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_e
 ### 3. 添加附件
 
 ```bash
-python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
+python /home/rainclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
   --to "recipient@example.com" \
   --subject "带附件的邮件" \
   --body "请查收附件" \
@@ -50,7 +50,7 @@ python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_e
 ### 4. 多个收件人
 
 ```bash
-python /home/scienceclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
+python /home/rainclaw/g9cLcJuQBSRkpRrLBsm9ys/skills/smtp-email/scripts/send_email.py \
   --to "user1@example.com,user2@example.com" \
   --subject "群发邮件" \
   --body "大家好"

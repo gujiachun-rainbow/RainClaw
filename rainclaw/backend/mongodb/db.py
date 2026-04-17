@@ -18,6 +18,7 @@ class MongoDB:
                 
                 uri = f"mongodb://{auth_part}{settings.mongodb_host}:{settings.mongodb_port}"
                 logger.info(f"Connecting to MongoDB at {settings.mongodb_host}:{settings.mongodb_port}")
+                logger.debug(f"MongoDB URI: {uri}")
                 
                 cls.client = AsyncIOMotorClient(uri)
                 cls.db = cls.client[settings.mongodb_db_name]

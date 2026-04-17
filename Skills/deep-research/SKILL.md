@@ -21,7 +21,7 @@ Phase 1: 问题拆解与数据源规划
 → Phase 6: 生成 PDF/DOCX 研究报告
 ```
 
-**工作空间路径**：所有文件输出到 `/home/scienceclaw/sessionid/` 目录下。
+**工作空间路径**：所有文件输出到 `/home/rainclaw/sessionid/` 目录下。
 
 ---
 
@@ -105,10 +105,10 @@ plan = {
             "queries": ["搜索词1", "搜索词2"],
         },
     },
-    "output_dir": "/home/scienceclaw/sessionid",
+    "output_dir": "/home/rainclaw/sessionid",
 }
 
-with open("/home/scienceclaw/sessionid/research_plan.json", "w", encoding="utf-8") as f:
+with open("/home/rainclaw/sessionid/research_plan.json", "w", encoding="utf-8") as f:
     json.dump(plan, f, ensure_ascii=False, indent=2)
 ```
 
@@ -157,17 +157,17 @@ config = {
     ],
     "target_total": 50,
     "top_k": 15,
-    "output_dir": "/home/scienceclaw/sessionid/research_papers",
+    "output_dir": "/home/rainclaw/sessionid/research_papers",
     "relevance_phrases": ["phrase1", "phrase2"],
     "min_score": 4
 }
 
-with open("/home/scienceclaw/sessionid/search_config.json", "w", encoding="utf-8") as f:
+with open("/home/rainclaw/sessionid/search_config.json", "w", encoding="utf-8") as f:
     json.dump(config, f, ensure_ascii=False, indent=2)
 ```
 
 ```bash
-python3 /skills/deep-research/scripts/arxiv_paper_finder.py /home/scienceclaw/sessionid/search_config.json
+python3 /skills/deep-research/scripts/arxiv_paper_finder.py /home/rainclaw/sessionid/search_config.json
 ```
 
 **脚本工作流程**：多 Query 搜索 → 去重 → 相关性评分 → 筛选 TOP-K → 下载 PDF
@@ -276,7 +276,7 @@ python3 -c "import fitz; print('PyMuPDF OK')" 2>/dev/null || python3 -m pip inst
 **方案 A（首选）—— pdftotext**：
 
 ```bash
-cd /home/scienceclaw/sessionid/research_papers
+cd /home/rainclaw/sessionid/research_papers
 for pdf in *.pdf; do
     txt="${pdf%.pdf}.txt"
     if [ ! -f "$txt" ]; then
@@ -291,7 +291,7 @@ done
 ```python
 import fitz, os, glob
 
-pdf_dir = "/home/scienceclaw/sessionid/research_papers"
+pdf_dir = "/home/rainclaw/sessionid/research_papers"
 for pdf_path in sorted(glob.glob(os.path.join(pdf_dir, "*.pdf"))):
     txt_path = pdf_path.replace(".pdf", ".txt")
     if os.path.exists(txt_path) and os.path.getsize(txt_path) > 100:
@@ -455,10 +455,10 @@ python3 -c "import os,glob; [print(f'{f}: {len(open(f).read())} chars') for f in
 
 ```bash
 # PDF 报告
-cp /builtin-skills/pdf/scripts/generate_report.py /home/scienceclaw/sessionid/generate_report.py
+cp /builtin-skills/pdf/scripts/generate_report.py /home/rainclaw/sessionid/generate_report.py
 
 # 或 DOCX 报告
-cp /builtin-skills/docx/scripts/generate_report.js /home/scienceclaw/sessionid/generate_report.js
+cp /builtin-skills/docx/scripts/generate_report.js /home/rainclaw/sessionid/generate_report.js
 ```
 
 **关键**：必须用 shell `cp` 复制，不要自己写报告生成代码。
@@ -470,7 +470,7 @@ cp /builtin-skills/docx/scripts/generate_report.js /home/scienceclaw/sessionid/g
 ```python
 import json, glob, os
 
-BASE = "/home/scienceclaw/sessionid"
+BASE = "/home/rainclaw/sessionid"
 SECTIONS_DIR = f"{BASE}/sections"
 
 # ── 构建参考文献列表（⚠️ CRITICAL：必须覆盖所有数据源） ──
@@ -582,7 +582,7 @@ print(f"Generated report_data.json ({len(data['sections'])} section blocks)")
 ### 6.3 生成最终报告
 
 ```bash
-cd /home/scienceclaw/sessionid
+cd /home/rainclaw/sessionid
 
 # PDF 报告
 python3 generate_report.py report_data.json final_report.pdf
@@ -596,7 +596,7 @@ node generate_report.js report_data.json final_report.docx
 ```bash
 python3 -c "
 import json, re
-data = json.load(open('/home/scienceclaw/sessionid/report_data.json'))
+data = json.load(open('/home/rainclaw/sessionid/report_data.json'))
 total = sum(len(s.get('body', '')) for s in data['sections'])
 secs = sum(1 for s in data['sections'] if s['type'] == 'heading')
 refs = sum(len(s.get('items', [])) for s in data['sections'] if s['type'] == 'references')
@@ -713,7 +713,7 @@ cat:cs.AI+AND+abs:%22large+language+model%22           # 限定分类
 ## 文件组织
 
 ```
-/home/scienceclaw/sessionid/
+/home/rainclaw/sessionid/
 ├── research_plan.json                # Phase 1 调研计划
 ├── search_config.json                # Phase 2A arXiv 搜索配置
 ├── research_papers/                  # Phase 2A arXiv 输出
