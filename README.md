@@ -198,3 +198,11 @@ RainClaw 采用两层记忆系统：
 ---
 
 **RainClaw** - 您的智能任务助手，让复杂任务变得简单！
+
+# Docker 镜像构建
+ 1. 构建镜像：
+ - docker build -t image_name:tag_name .
+ 2. 阿里云镜像仓库, 并标签镜像：
+ - docker tag image_name:tag_name crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name
+ 3. 推送镜像：
+ - docker push crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name

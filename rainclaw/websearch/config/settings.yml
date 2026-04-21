@@ -1,0 +1,58 @@
+use_default_settings: true
+
+server:
+  bind_address: "0.0.0.0"
+  secret_key: "a7B9cD3eF5gH1jK8"
+
+general:
+  default_locale: "zh"
+  locales:
+    - zh
+    - en
+
+search:
+  safe_search: 0
+  autocomplete: "google"
+  default_lang: "zh"
+  language_support: true
+  formats:
+    - html
+    - json
+
+engines:
+  - name: 360search
+    engine: 360search
+    shortcut: 360so
+    timeout: 10.0
+    disabled: false
+
+  - name: bing
+    engine: bing
+    shortcut: bi
+    disabled: false
+
+  - name: google
+    engine: google
+    proxies:
+      http:
+        - http://192.168.50.150:7890
+      https:
+        - http://192.168.50.150:7890
+    disabled: false
+
+  - name: brave
+    engine: brave
+    shortcut: br
+    time_range_support: true
+    paging: true
+    categories: [general, web]
+    brave_category: search
+    disabled: true
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: true
+
+ui:
+  static_use_hash: true

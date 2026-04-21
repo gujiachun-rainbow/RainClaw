@@ -1,0 +1,32 @@
+# 排除Git相关文件
+.git/
+.gitignore
+
+# 排除Python缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 排除IDE和编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 排除环境文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 排除构建产物
+dist/
+build/
+
+.venv/
+
+
+Dockerfile
+Dockerfile.*

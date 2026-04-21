@@ -1,0 +1,9 @@
+crawl4ai
+fastapi
+uvicorn[standard]
+gunicorn
+aiohttp
+pydantic
+python-dotenv
+markdown
+beautifulsoup4

@@ -1,38 +1,21 @@
-# syntax=docker/dockerfile:1.4
-# Use Node.js as base image
-FROM node:18-alpine AS build-stage
+# Use nginx as production environment image
+FROM crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/nginx:stable-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json files
-COPY package*.json ./
-
-# Install project dependencies (BuildKit npm cache)
-RUN --mount=type=cache,target=/root/.npm,sharing=locked \
-    npm ci
-
-# Copy project files
-COPY . .
-
-# Build application - skip type checking
-RUN npm run build
-
-# Use nginx as production environment image
-FROM nginx:stable-alpine AS production-stage
-
 # Copy built files to nginx
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf.template
+COPY dist /usr/share/nginx/html
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
 # Expose port 80
 EXPOSE 80
 
 # Start nginx with environment variable substitution
 CMD ["/docker-entrypoint.sh"] 
+# CMD /docker-entrypoint.sh

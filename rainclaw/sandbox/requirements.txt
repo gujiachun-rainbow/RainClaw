@@ -1,0 +1,25 @@
+# ── ToolUniverse（最慢，极少变动）─────────────────────────────────
+# tooluniverse
+
+# ── @tool 运行依赖 + docx skill XML 处理 ───────────────────────────────
+langchain-core
+pydantic
+httpx
+pyyaml
+defusedxml
+
+# ── PDF/XLSX/PPTX skill + data analysis 依赖 ───────────────────────────
+fpdf2>=2.8.5
+fonttools
+pypdf
+pdfplumber
+Pillow
+pdf2image
+PyMuPDF
+matplotlib
+numpy
+reportlab
+pandas
+seaborn
+openpyxl
+markitdown[pptx]
