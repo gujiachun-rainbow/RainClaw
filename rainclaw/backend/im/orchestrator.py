@@ -3,7 +3,8 @@ from __future__ import annotations
 import asyncio
 import json
 import time
-from typing import Any, Dict, Optional
+import shortuuid
+from typing import Any, Dict, Optional, List
 
 from fastapi import HTTPException
 from loguru import logger
@@ -99,6 +100,7 @@ class IMServiceOrchestrator:
     async def _process_message(self, adapter: IMAdapter, message: IMMessage):
         formatter = self.formatters[message.platform]
         text = message.get_text().strip()
+        logger.info(f"[IM] processing message: platform={message.platform.value}, message_id={message.message_id}, text_length={len(text)}, content_type={message.content_type}")
         if not text:
             logger.info(f"[IM] empty text ignored: platform={message.platform.value}, message_id={message.message_id}")
             return
@@ -149,6 +151,51 @@ class IMServiceOrchestrator:
                 platform_chat_id=message.chat.chat_id,
                 user_id=binding.science_user_id,
             )
+            # 更新科学会话的 events、latest_message、latest_message_at 字段
+            science_session = await async_get_science_session(session.science_session_id)
+            now = int(time.time())
+            # 添加用户消息事件
+            user_event = {
+                "event": "message",
+                "data": {
+                    "event_id": shortuuid.uuid(),
+                    "timestamp": now,
+                    "content": text,
+                    "role": "user",
+                    "attachments": [],
+                    "message_id": message.message_id
+                }
+            }
+            events = getattr(science_session, "events", [])
+            if not isinstance(events, list):
+                events = []
+                science_session.events = events
+            events.append(user_event)
+            # 更新最新消息字段
+            science_session.latest_message = text
+            science_session.latest_message_at = now
+            # 生成会话标题（参考网页版逻辑）
+            if text.strip() and not (getattr(science_session, "title", None) or "").strip():
+                # 计算用户消息数量
+                user_message_count = sum(1 for evt in events if evt.get("event") == "message" and evt.get("data", {}).get("role") == "user")
+                if user_message_count <= 1:
+                    try:
+                        # 导入必要的模块
+                        from backend.route.sessions import _generate_session_title
+                        gen_title = await _generate_session_title(text)
+                        if gen_title:
+                            science_session.title = gen_title
+                    except Exception as exc:
+                        logger.warning("Title generation failed: %s", exc)
+                        # 回退：使用消息的第一行或截断的消息
+                        first_line = text.split("\n")[0].strip()
+                        if first_line:
+                            science_session.title = "[飞书]" + (first_line[:50] + "…") if len(first_line) > 50 else first_line
+                        else:
+                            science_session.title = "飞书会话"
+            # 更新状态为运行中
+            science_session.status = "running"
+            await science_session.save()
             task_intro = text if len(text) <= 120 else f"{text[:117]}..."
             reply_to = message.message_id or None
             intro_sent = await adapter.send_message(
@@ -200,7 +247,50 @@ class IMServiceOrchestrator:
                 formatter=formatter,
                 on_progress=on_progress,
                 progress_state=progress_state,
+                science_session=science_session,
             )
+            # 更新科学会话的 events、latest_message、latest_message_at 字段，添加AI回复
+            now = int(time.time())
+            ai_event = {
+                "event": "message",
+                "data": {
+                    "event_id": shortuuid.uuid(),
+                    "timestamp": now,
+                    "content": response_text,
+                    "role": "assistant",
+                    "attachments": []
+                }
+            }
+            events = getattr(science_session, "events", [])
+            if not isinstance(events, list):
+                events = []
+                science_session.events = events
+            events.append(ai_event)
+            # 更新最新消息字段为AI回复
+            science_session.latest_message = response_text
+            science_session.latest_message_at = now
+            # 更新会话状态为已完成
+            science_session.status = "completed"
+            # 添加 done 事件
+            done_event = {
+                "event": "done",
+                "data": {
+                    "event_id": shortuuid.uuid(),
+                    "timestamp": now,
+                    "statistics": {
+                        "tool_call_count": progress_state.get("tool_call_count", 0),
+                        "total_duration_ms": int((time.time() - progress_state.get("started_monotonic", time.time())) * 1000),
+                    },
+                    "round_files": [],
+                },
+            }
+            events = getattr(science_session, "events", [])
+            if not isinstance(events, list):
+                events = []
+                science_session.events = events
+            events.append(done_event)
+            # 保存会话
+            await science_session.save()
             if self.progress_mode == "card_entity":
                 result_card = self._build_result_card(progress_state, response_text)
                 logger.debug(f"[card_entity] 发送结果卡片, response_text 长度: {len(response_text)}")
@@ -243,19 +333,51 @@ class IMServiceOrchestrator:
         formatter: IMMessageFormatter,
         on_progress=None,
         progress_state: Optional[Dict[str, Any]] = None,
+        science_session=None,
     ) -> str:
-        session = await async_get_science_session(session_id)
+        logger.info(f"[IM] executing ai task: session_id={session_id}, query_length={len(query)}, query_preview={query[:100]}")
+        session = science_session or await async_get_science_session(session_id)
         message_chunks: list[str] = []
         error_messages: list[str] = []
         last_tool_result: Optional[str] = None
-        
+
         async for evt in arun_science_task_stream(session=session, query=query):
             event_type = evt.get("event")
             data = evt.get("data", {})
             self._record_progress_metrics(progress_state, event_type, data)
             if event_type == "thinking":
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    events.append({
+                        "event": "thinking",
+                        "data": {
+                            "event_id": shortuuid.uuid(),
+                            "timestamp": int(time.time()),
+                            "content": data.get("content", "")
+                        }
+                    })
                 continue
             if event_type == "tool_call":
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    events.append({
+                        "event": "tool",
+                        "data": {
+                            "event_id": shortuuid.uuid(),
+                            "timestamp": int(time.time()),
+                            "tool_call_id": data.get("tool_call_id", shortuuid.uuid()),
+                            "name": data.get("function", ""),
+                            "status": "calling",
+                            "function": data.get("function", ""),
+                            "args": data.get("args", {})
+                        }
+                    })
                 if on_progress and event_type in self.realtime_events:
                     text = formatter.format_tool_call(data.get("function", ""), data.get("args", {}))
                     await on_progress("tool_call", text, data)
@@ -266,7 +388,25 @@ class IMServiceOrchestrator:
                     last_tool_result = json.dumps(content, ensure_ascii=False, indent=2)
                 else:
                     last_tool_result = str(content)
-                
+
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    events.append({
+                        "event": "tool",
+                        "data": {
+                            "event_id": shortuuid.uuid(),
+                            "timestamp": int(time.time()),
+                            "tool_call_id": data.get("tool_call_id", ""),
+                            "name": data.get("function", ""),
+                            "status": "called",
+                            "function": data.get("function", ""),
+                            "content": content,
+                            "duration_ms": data.get("duration_ms")
+                        }
+                    })
                 if on_progress and event_type in self.realtime_events:
                     success = str(data.get("status", "success")).lower() != "error"
                     text = formatter.format_tool_result(data.get("function", ""), success=success)
@@ -280,7 +420,62 @@ class IMServiceOrchestrator:
                     text = self._normalize_realtime_content("planning_message", str(content))
                     await on_progress("planning_message", text, data)
                 continue
+            if event_type == "step_start":
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    events.append({
+                        "event": "step",
+                        "data": {
+                            "event_id": shortuuid.uuid(),
+                            "timestamp": int(time.time()),
+                            "status": "running",
+                            "id": str(data.get("step", {}).get("id", "S1")),
+                            "description": str(data.get("step", {}).get("content", ""))
+                        },
+                        "id": shortuuid.uuid(),
+                        "created_at": int(time.time()),
+                    })
+                continue
+            if event_type == "step_end":
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    events.append({
+                        "event": "step",
+                        "data": {
+                            "event_id": shortuuid.uuid(),
+                            "timestamp": int(time.time()),
+                            "status": "completed",
+                            "id": str(data.get("step_id", "S1")),
+                            "description": ""
+                        },
+                        "id": shortuuid.uuid(),
+                        "created_at": int(time.time()),
+                    })
+                continue
             if event_type == "plan_update":
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    plan = data.get("plan") or []
+                    if isinstance(plan, list):
+                        events.append({
+                            "event": "plan",
+                            "data": {
+                                "event_id": shortuuid.uuid(),
+                                "timestamp": int(time.time()),
+                                "steps": self._map_plan_to_steps(plan)
+                            },
+                            "id": shortuuid.uuid(),
+                            "created_at": int(time.time()),
+                        })
                 if on_progress and event_type in self.realtime_events:
                     plan_steps = data.get("plan", [])
                     text = formatter.format_plan(plan_steps) if plan_steps else "📋 执行计划已更新"
@@ -294,6 +489,19 @@ class IMServiceOrchestrator:
             if event_type == "error":
                 error_text = formatter.format_error(data.get("message", "未知错误"))
                 error_messages.append(error_text)
+                if science_session:
+                    events = getattr(science_session, "events", [])
+                    if not isinstance(events, list):
+                        events = []
+                        science_session.events = events
+                    events.append({
+                        "event": "error",
+                        "data": {
+                            "event_id": shortuuid.uuid(),
+                            "timestamp": int(time.time()),
+                            "error": data.get("message", "未知错误")
+                        }
+                    })
                 if on_progress and event_type in self.realtime_events:
                     await on_progress("error", self._normalize_realtime_content("error", error_text), data)
                 continue
@@ -773,6 +981,29 @@ class IMServiceOrchestrator:
             "completed": "✅",
             "failed": "❌",
         }.get(status, "⏳")
+
+    def _map_plan_to_steps(self, plan: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        def _map_status(status: str) -> str:
+            status = (status or "pending").strip()
+            if status in {"in_progress", "running"}:
+                return "running"
+            if status == "completed":
+                return "completed"
+            if status in {"blocked", "failed"}:
+                return "failed"
+            return "pending"
+
+        return [
+            {
+                "event_id": shortuuid.uuid(),
+                "timestamp": int(time.time()),
+                "status": _map_status(str(step.get("status") or "pending")),
+                "id": str(step.get("id") or ""),
+                "description": str(step.get("content") or ""),
+                "tools": step.get("tools") if isinstance(step.get("tools"), list) else [],
+            }
+            for step in plan
+        ]
 
     def _create_binding_guide(self, platform: IMPlatform, platform_user_id: str) -> IMResponse:
         platform_name = {

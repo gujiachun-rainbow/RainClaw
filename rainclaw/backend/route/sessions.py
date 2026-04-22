@@ -1539,6 +1539,7 @@ async def _agent_background_worker(
                 logger.warning("Title generation failed: %s", exc)
 
     try:
+        logger.info(f"[_agent_background_worker] Started agent task for session {session_id}, message:{message}")
         async for evt in arun_science_task_stream(
             session=session, query=message or "", attachments=user_attachments,
             language=language,
