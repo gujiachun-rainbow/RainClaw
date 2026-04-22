@@ -152,6 +152,7 @@ async def task_chat(
     await session.save()
 
     try:
+        logger.info(f"[task_chat] Task {body.task_id} chatting with session {chat_id},prompt: {prompt}")
         async for evt in arun_science_task_stream(session, prompt):
             event_type = evt.get("event") or ""
             data = evt.get("data") or {}

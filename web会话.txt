@@ -1,0 +1,698 @@
+按 SPACE 选择此行
+行
+: 
+6
+ 
+111ms
+[
+  {
+    "event": "message",
+    "data": {
+      "event_id": "7SgzgcRSGGAwc44WXkpTBm",
+      "timestamp": 1776840210,
+      "content": "你知道我是谁吗",
+      "role": "user",
+      "attachments": []
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "MTpys89ANzDJUkrQhFJfcG",
+      "timestamp": 1776840211,
+      "content": ""
+    }
+  },
+  {
+    "event": "step",
+    "data": {
+      "event_id": "QSoGx9MzyKJtVwLaHTby55",
+      "timestamp": 1776840211,
+      "status": "running",
+      "id": "S1",
+      "description": "你知道我是谁吗"
+    }
+  },
+  {
+    "event": "plan",
+    "data": {
+      "event_id": "mDR8wZhPyrgVzduUDaYcvK",
+      "timestamp": 1776840211,
+      "steps": [
+        {
+          "event_id": "MxMK86c9h4ovaBggsgPNWY",
+          "timestamp": 1776840211,
+          "status": "running",
+          "id": "S1",
+          "description": "你知道我是谁吗",
+          "tools": []
+        }
+      ]
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "7TL55hmpEkswEtzmgB4JBj",
+      "timestamp": 1776840220,
+      "content": "The"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "3La8qtUryVsNtSBqgvXBgG",
+      "timestamp": 1776840220,
+      "content": " user"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "LfRbdAbvowsKSQgvyP8U3R",
+      "timestamp": 1776840220,
+      "content": " is"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "BQocVFAQXCUZKp4Nu7ZrhC",
+      "timestamp": 1776840220,
+      "content": " asking"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "36UyFMpG9Gw7GLdvxjjXti",
+      "timestamp": 1776840220,
+      "content": " if"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "YLseQjmXAAr9ipSc8MtKgk",
+      "timestamp": 1776840221,
+      "content": " I"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "66ECmUxshxZ2uxjAfThz5w",
+      "timestamp": 1776840221,
+      "content": " know"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "hPScqxG3ML3eVekd5GWHid",
+      "timestamp": 1776840221,
+      "content": " who"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "mqzgpvh7YDNEAfdikf7Zqs",
+      "timestamp": 1776840221,
+      "content": " they"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "RQoE2jdSavwZfkmksPzRVn",
+      "timestamp": 1776840221,
+      "content": " are"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "9J55FXZwRoBYH6iX9ZWGsz",
+      "timestamp": 1776840221,
+      "content": "."
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "Va5LTETVUA7y3eqwanzeSy",
+      "timestamp": 1776840221,
+      "content": " Based"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "PLMjSz7bae3WDepebtB3Jt",
+      "timestamp": 1776840221,
+      "content": " on"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "ikQYzSUMajb9qoPXfRXNks",
+      "timestamp": 1776840221,
+      "content": " my"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "e6LJV8nVoduG4yKjkB5GdH",
+      "timestamp": 1776840221,
+      "content": " memory"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "ZQD4wwYPqafZBFXDYCx2WH",
+      "timestamp": 1776840221,
+      "content": ","
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "C8Nz9vvFGUJaR2cvEYMSGZ",
+      "timestamp": 1776840221,
+      "content": " I"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "TnEzn2WKZJjdeyUcmPdmkt",
+      "timestamp": 1776840221,
+      "content": " know"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "cEBGuzCr4t6VyPtuy2kcxL",
+      "timestamp": 1776840221,
+      "content": " the"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "MrobpaXtoFEWtAfAa4xnwH",
+      "timestamp": 1776840221,
+      "content": " user"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "nWKitJ2PNVwGRQBDhwjXop",
+      "timestamp": 1776840221,
+      "content": " refers"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "mSngWa3cCk6H83F9GUvPDD",
+      "timestamp": 1776840221,
+      "content": " to"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "JiGLwSEdAa5JDuAKHRB52k",
+      "timestamp": 1776840221,
+      "content": " themselves"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "fAozvQ6bY9tFtuo49n66iD",
+      "timestamp": 1776840221,
+      "content": " as"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "oYrAkYDryjc76z6mQSAbtz",
+      "timestamp": 1776840221,
+      "content": " \""
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "7CGamhqbXsVjR9YbQ6DS2p",
+      "timestamp": 1776840221,
+      "content": "老"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "mQJkVdVuH9BEsiNDdgTHp9",
+      "timestamp": 1776840221,
+      "content": "顾"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "j6d7nFRUBs7NTJde9jmqD6",
+      "timestamp": 1776840221,
+      "content": "\""
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "VeGy34BCE2ZHvhTBVWyPTo",
+      "timestamp": 1776840221,
+      "content": " ("
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "AkqFQWggyMMs3SExBBNrQ3",
+      "timestamp": 1776840221,
+      "content": "Old"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "GakAggpj8cpNk9L6PhJsWp",
+      "timestamp": 1776840221,
+      "content": " Gu"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "JN5LJMYqjqhYtpqi3AUMDG",
+      "timestamp": 1776840221,
+      "content": ")."
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "oD5UuJYRWQMLqVHRje97oR",
+      "timestamp": 1776840221,
+      "content": " Let"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "fMgQGGRGCV2sYGTH8noKNL",
+      "timestamp": 1776840221,
+      "content": " me"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "5t35suXuLsYyaEh5dc6WpT",
+      "timestamp": 1776840221,
+      "content": " respond"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "C22bkEkFsuJPLapztyp57A",
+      "timestamp": 1776840221,
+      "content": " in"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "92pfK5nf8gqQQ98UHgHEZk",
+      "timestamp": 1776840221,
+      "content": " Chinese"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "YPvQwuYYBYzSb4HvJa8AyW",
+      "timestamp": 1776840221,
+      "content": " as"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "fwcVaukTbL7YxyqGLznpxB",
+      "timestamp": 1776840221,
+      "content": " per"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "3kigN3MKUdMZyZtkuiHNuh",
+      "timestamp": 1776840221,
+      "content": " their"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "GCos8hfqNqdszNMTwLPDcC",
+      "timestamp": 1776840221,
+      "content": " preference"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "EH5Lvh9g3YgDdaf5kfXt6u",
+      "timestamp": 1776840222,
+      "content": "."
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "3y8daW9VjBSYAKwfoCKPje",
+      "timestamp": 1776840222,
+      "content": "老"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "7JQcshBS9z47xoXK236uWE",
+      "timestamp": 1776840222,
+      "content": "顾"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "YtBBTbLeS9VPXi5rqr6GGi",
+      "timestamp": 1776840222,
+      "content": "，"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "amVoibMn3LeD7T5eCJSYrv",
+      "timestamp": 1776840222,
+      "content": "你好"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "KFkEBFtNis6PZ3KjEGUdGw",
+      "timestamp": 1776840222,
+      "content": "！"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "8bTfFGc57yR7G5FsgTUwdE",
+      "timestamp": 1776840222,
+      "content": "我知道"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "ULFKZWcUC7R8bHdk5ESscG",
+      "timestamp": 1776840222,
+      "content": "你"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "563uZrS3yVx9okHFVSVAPD",
+      "timestamp": 1776840222,
+      "content": "自称"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "asG8xMioHUrcc3wcnY9RPp",
+      "timestamp": 1776840222,
+      "content": "\""
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "g5EFLfynem9EztLSFp4v7c",
+      "timestamp": 1776840222,
+      "content": "老"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "Hk2zNrR5Bdfywasmsphi5h",
+      "timestamp": 1776840222,
+      "content": "顾"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "XFFSuLdZ27pAd5R7HrJYFz",
+      "timestamp": 1776840222,
+      "content": "\"，"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "iTu2Rk5z7EWwrtFL4XQmfz",
+      "timestamp": 1776840222,
+      "content": "这是我们"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "fX8uEG366VKtRGjH3Bgv95",
+      "timestamp": 1776840222,
+      "content": "之间的"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "it4SWXF2vXBZibEdZGpztu",
+      "timestamp": 1776840222,
+      "content": "称呼"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "BCuiJ8Qc58JVsp2VVMZqXR",
+      "timestamp": 1776840222,
+      "content": "。"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "XnNQKVhUz9k67RhGu5KS6y",
+      "timestamp": 1776840222,
+      "content": "除此之外"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "CJZrGrE6hpri9apSDa9vgK",
+      "timestamp": 1776840222,
+      "content": "，"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "U2X9tewiHZ6b7H2FSL5Pgq",
+      "timestamp": 1776840222,
+      "content": "我"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "GMXEDtS95KtnG6GGCZnysv",
+      "timestamp": 1776840222,
+      "content": "目前"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "QQgmUuy4VdQHDZgLvJTNtR",
+      "timestamp": 1776840222,
+      "content": "没有"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "K7JxzWfctvYZhRAeRLCyi2",
+      "timestamp": 1776840222,
+      "content": "更多"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "F84rsH2cXHJ46387UJEoWW",
+      "timestamp": 1776840222,
+      "content": "关于"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "eX5nJVXjjgit5xLJT8weSv",
+      "timestamp": 1776840222,
+      "content": "你的"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "AKRAQQjxdSzzxCrY2acroZ",
+      "timestamp": 1776840222,
+      "content": "信息"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "PQVg68E6do4YDpGRGz4awh",
+      "timestamp": 1776840222,
+      "content": "。\n\n"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "3YuWebky65H7Ygph38LPj9",
+      "timestamp": 1776840222,
+      "content": "有什么"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "LWCW8v9aRqmf4H34tYwXH9",
+      "timestamp": 1776840223,
+      "content": "我可以"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "FS2DNjKc6gKXgVZV2yav7X",
+      "timestamp": 1776840223,
+      "content": "帮"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "GaG8bhUKWEkDxxcz9g9ASE",
+      "timestamp": 1776840223,
+      "content": "你的"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "9DNHr4eHypddts9mnahCZa",
+      "timestamp": 1776840223,
+      "content": "吗"
+    }
+  },
+  {
+    "event": "thinking",
+    "data": {
+      "event_id": "Wmmifs6x4ZrxAu6xQmSWqz",
+      "timestamp": 1776840223,
+      "content": "？"
+    }
+  },
+  {
+    "event": "plan",
+    "data": {
+      "event_id": "Rdqf9hmANZoaLgCBA8yZ9w",
+      "timestamp": 1776840223,
+      "steps": [
+        {
+          "event_id": "o6zwH5thGnCZmpFxYjzTWG",
+          "timestamp": 1776840223,
+          "status": "completed",
+          "id": "S1",
+          "description": "你知道我是谁吗",
+          "tools": []
+        }
+      ]
+    }
+  },
+  {
+    "event": "step",
+    "data": {
+      "event_id": "S8TaAFuMDHkSTUSsFcjTnW",
+      "timestamp": 1776840223,
+      "status": "completed",
+      "id": "S1",
+      "description": ""
+    }
+  },
+  {
+    "event": "message",
+    "data": {
+      "event_id": "etJcPjY2MmNY7deJ7vA48q",
+      "timestamp": 1776840223,
+      "content": "老顾，你好！我知道你自称\"老顾\"，这是我们之间的称呼。除此之外，我目前没有更多关于你的信息。\n\n有什么我可以帮你的吗？",
+      "role": "assistant",
+      "attachments": []
+    }
+  },
+  {
+    "event": "done",
+    "data": {
+      "event_id": "3Z2uwWpici8B398vNtWLaD",
+      "timestamp": 1776840223,
+      "statistics": {
+        "total_duration_ms": 12698,
+        "tool_call_count": 0,
+        "total_tool_duration_ms": 0,
+        "input_tokens": 12667,
+        "output_tokens": 76,
+        "token_count": 12743
+      },
+      "round_files": []
+    }
+  }
+]

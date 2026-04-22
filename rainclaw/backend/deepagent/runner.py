@@ -347,7 +347,7 @@ def _build_plan(description: str) -> List[PlanStep]:
 
 
 def _plan_for_frontend(plan: List[PlanStep]) -> List[dict]:
-    return [{**step, "description": step["content"], "tools": []} for step in plan]
+    return [{**step, "description": step["content"] or step.get("description", ""), "tools": []} for step in plan]
 
 
 def _todos_to_plan_steps(todos: List[Dict]) -> List[dict]:
@@ -887,5 +887,9 @@ async def arun_science_task_stream(
     language: Optional[str] = None,
 ) -> AsyncGenerator[dict, None]:
     """对话任务流入口，所有模式统一走 DeepAgent。"""
+    if not query or not query.strip():
+        logger.error(f"[arun_science_task_stream] Failed for session={session.session_id}: no query")
+        yield {"event": "error", "data": {"message": "任务执行出错：未正常接收到prompt参数。"}}
+        return
     async for evt in _arun_deep_agent_stream(session, query, attachments, language=language):
         yield evt

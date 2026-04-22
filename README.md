@@ -16,92 +16,204 @@ RainClaw/
 │   ├── weather/         # 天气查询技能
 │   └── writing-plans/   # 计划写作技能
 ├── Tools/               # 工具扩展目录
-│   ├── __init__.py
-│   └── query_weather.py # 天气查询工具
+│   └── __init__.py
 ├── rainclaw/            # 核心代码目录
 │   ├── backend/         # 后端代码
+│   │   ├── builtin_skills/ # 内置技能
+│   │   │   ├── docx/     # Word 文档处理
+│   │   │   ├── feishu-setup/ # 飞书集成设置
+│   │   │   ├── find-skills/ # 技能发现
+│   │   │   ├── pdf/      # PDF 文档处理
+│   │   │   ├── pptx/     # PowerPoint 处理
+│   │   │   ├── skill-creator/ # 技能创建器
+│   │   │   ├── tool-creator/ # 工具创建器
+│   │   │   └── xlsx/     # Excel 文档处理
 │   │   ├── deepagent/   # 深度代理实现
+│   │   ├── im/          # 即时通讯集成
+│   │   │   └── adapters/ # 适配器（如飞书）
 │   │   ├── mongodb/     # MongoDB 连接
+│   │   ├── route/       # API 路由
+│   │   ├── user/        # 用户管理
 │   │   ├── config.py    # 配置文件
-│   │   └── pyproject.toml # 项目依赖
+│   │   ├── main.py      # 主应用入口
+│   │   └── requirements.txt # 项目依赖
+│   ├── frontend/        # 前端代码
+│   │   ├── public/      # 静态资源
+│   │   ├── src/         # 源代码
+│   │   │   ├── api/     # API 客户端
+│   │   │   ├── components/ # 组件
+│   │   │   │   ├── filePreviews/ # 文件预览
+│   │   │   │   ├── icons/      # 图标
+│   │   │   │   ├── login/      # 登录相关
+│   │   │   │   ├── settings/   # 设置相关
+│   │   │   │   ├── toolViews/  # 工具视图
+│   │   │   │   └── ui/         # UI 组件
+│   │   │   ├── composables/ # 组合式函数
+│   │   │   └── App.vue    # 主应用组件
+│   │   ├── package.json # 前端依赖
+│   │   └── vite.config.ts # Vite 配置
 ├── .gitignore           # Git 忽略文件
 ├── AGENTS.md            # 代理配置文件
 ├── LICENSE              # 许可证文件
-└── README.md            # 项目说明文件
+├── README.md            # 项目说明文件
+└── docker-compose.yml   # Docker 编排配置
 ```
 
 ## 核心功能
 
-- **多模型支持**：支持 OpenAI、Google Gemini、Anthropic Claude 等多种 LLM 模型
-- **技能系统**：内置多种技能，如深度研究、文案写作、头脑风暴等
-- **工具扩展**：支持自定义工具扩展，实现功能增强
-- **沙箱执行**：安全的代码执行环境，隔离执行风险
-- **实时信息**：集成网络搜索功能，获取最新信息
-- **记忆系统**：跨会话记忆和会话级上下文管理
+### 1. 多模型支持
+- 支持 OpenAI、Google Gemini、Anthropic Claude、DeepSeek、Kimi、Qwen 等多种 LLM 模型
+- 模型配置灵活，可根据任务选择最适合的模型
+
+### 2. 技能系统
+- **内置技能**：
+  - brainstorming：头脑风暴，用于创意生成和问题解决
+  - copywriting：文案写作，用于生成营销文案和内容
+  - deep-research：深度研究，用于复杂主题的调研和分析
+  - github-trending：GitHub 趋势，获取热门开源项目
+  - read-github：读取 GitHub 仓库内容
+  - smtp-email：邮件发送，通过 SMTP 发送电子邮件
+  - weather：天气查询，获取实时天气信息
+  - writing-plans：计划写作，生成项目计划和任务列表
+
+- **文档处理技能**：
+  - docx：Word 文档处理，支持读取、编辑和生成
+  - pdf：PDF 文档处理，支持提取内容和表单
+  - pptx：PowerPoint 演示文稿处理
+  - xlsx：Excel 电子表格处理
+
+- **工具创建技能**：
+  - skill-creator：创建新技能的工具
+  - tool-creator：创建新工具的工具
+
+### 3. 工具扩展系统
+- 支持自定义工具扩展，实现功能增强
+- 内置工具包括：
+  - web_search：网络搜索，获取最新信息
+  - web_crawl：网页爬取，获取网页内容
+  - propose_skill_save：保存新技能
+  - propose_tool_save：保存新工具
+  - eval_skill：评估技能性能
+  - grade_eval：评估结果评分
+
+### 4. 前端功能
+- **现代化界面**：基于 Vue 3 + TypeScript + Tailwind CSS 构建
+- **文件管理**：支持多种文件类型的预览和管理
+  - 代码文件：语法高亮显示
+  - 文档文件：Word、PDF、Excel 预览
+  - 图片文件：直接预览
+  - 分子文件：3D 分子结构查看
+- **实时交互**：基于 SSE 的实时消息更新
 - **多语言支持**：支持中文和英文响应
+- **设置管理**：用户账户、模型、通知等设置
+
+### 5. 后端功能
+- **API 服务**：基于 FastAPI 的 RESTful API
+- **异步处理**：使用 Python 异步特性提高性能
+- **数据库集成**：MongoDB 用于数据存储
+- **即时通讯**：飞书集成，支持消息推送
+- **沙箱执行**：安全的代码执行环境，隔离执行风险
+- **记忆系统**：跨会话记忆和会话级上下文管理
+
+### 6. 部署与集成
+- **Docker 支持**：容器化部署，简化环境配置
+- **环境变量配置**：灵活的配置管理
+- **多平台支持**：支持 Windows、Linux、MacOS
 
 ## 技术栈
 
-- **后端**：Python 3.12+
+### 前端技术栈
+- **框架**：Vue 3 + TypeScript
+- **构建工具**：Vite
+- **样式**：Tailwind CSS
+- **UI 组件**：Reka UI
+- **状态管理**：Vue 3 Composition API
+- **路由**：Vue Router
+- **国际化**：Vue I18n
+- **HTTP 客户端**：Axios
+- **实时通信**：SSE (Server-Sent Events)
+- **代码编辑器**：Monaco Editor
+- **终端模拟器**：xterm.js
+- **VNC 查看器**：noVNC
+- **Markdown 渲染**：Marked + KaTeX + Mermaid
+- **动画**：Framer Motion
+
+### 后端技术栈
+- **语言**：Python 3.12+
 - **Web 框架**：FastAPI
 - **异步服务器**：Uvicorn
-- **数据验证**：Pydantic
+- **数据验证**：Pydantic V2
 - **数据库**：MongoDB (Motor 异步驱动)
-- **LLM 集成**：LangChain、DeepAgents
+- **LLM 集成**：LangChain、DeepAgents、LangGraph
 - **事件流**：SSE (Server-Sent Events)
+- **即时通讯**：飞书 API
+- **网络搜索**：Tavily API
 - **容器化**：Docker
 
 ## 依赖项
 
-主要依赖项包括：
+### 前端依赖
+- vue@^3.3.4
+- vue-router@^4.5.1
+- vue-i18n@^9.14.4
+- axios@^1.8.4
+- tailwindcss@^3.3.2
+- typescript@^5.6.3
+- vite@^4.3.9
+- monaco-editor@^0.52.2
+- @xterm/xterm@^6.0.0
+- @novnc/novnc@^1.5.0
+- marked@^15.0.8
+- katex@^0.16.38
+- mermaid@^11.13.0
+- framer-motion@^10.12.16
 
-- fastapi==0.135.3
-- uvicorn[standard]==0.44.0
-- pydantic==2.13.0
-- pydantic-settings==2.13.1
-- python-dotenv==1.2.2
-- sse-starlette==3.3.4
-- loguru==0.7.3
-- python-json-logger==4.1.0
-- bcrypt==5.0.0
-- shortuuid==1.0.13
-- motor==3.7.1
-- httpx==0.28.1
-- tavily-python==0.7.23
-- pyyaml==6.0.3
-- deepagents==0.5.2
-- langchain-mcp-adapters==0.2.2
-- lark-oapi==1.5.3
-- qrcode==8.2.0
-- langchain==1.2.15
-- langgraph==1.1.6
-- langchain-community==0.4.1
-- langchain-openai==1.1.13
+### 后端依赖
+- fastapi@==0.135.3
+- uvicorn[standard]@==0.44.0
+- pydantic@==2.13.0
+- pydantic-settings@==2.13.1
+- motor@==3.7.1
+- langchain@==1.2.15
+- langgraph@==1.1.6
+- deepagents@==0.5.2
+- lark-oapi@==1.5.3
+- tavily-python@==0.7.23
 
 ## 安装指南
 
-1. **克隆项目**
+### 1. 克隆项目
 
 ```bash
 git clone https://github.com/yourusername/RainClaw.git
 cd RainClaw
 ```
 
-2. **创建虚拟环境并安装依赖**
+### 2. 后端安装
 
 ```bash
 cd rainclaw/backend
-# 使用 uv 创建虚拟环境
-uv venv
+# 创建虚拟环境
+python -m venv venv
 # Windows
-.venv\Scripts\activate
+venv\Scripts\activate
 # Linux/Mac
-source .venv/bin/activate
+source venv/bin/activate
 # 安装依赖
-pip install -e .
+pip install -r requirements.txt
 ```
 
-3. **配置环境变量**
+### 3. 前端安装
+
+```bash
+cd rainclaw/frontend
+# 安装依赖
+npm install
+# 构建项目
+npm run build
+```
+
+### 4. 配置环境变量
 
 创建 `.env` 文件，添加以下配置：
 
@@ -119,35 +231,59 @@ CONTEXT_WINDOW=128000
 MAX_TOKENS=4096
 ```
 
-4. **启动服务**
+### 5. 启动服务
+
+#### 后端服务
 
 ```bash
+cd rainclaw/backend
 uvicorn main:app --reload
 ```
 
-## 技能系统
+#### 前端开发服务器
 
-RainClaw 包含以下内置技能：
+```bash
+cd rainclaw/frontend
+npm run dev
+```
 
-- **brainstorming**：头脑风暴，用于创意生成和问题解决
-- **copywriting**：文案写作，用于生成营销文案和内容
-- **deep-research**：深度研究，用于复杂主题的调研和分析
-- **github-trending**：GitHub 趋势，获取热门开源项目
-- **read-github**：读取 GitHub 仓库内容
-- **smtp-email**：邮件发送，通过 SMTP 发送电子邮件
-- **weather**：天气查询，获取实时天气信息
-- **writing-plans**：计划写作，生成项目计划和任务列表
+### 6. Docker 部署
 
-## 工具系统
+使用 docker-compose 快速部署：
 
-RainClaw 支持以下内置工具：
+```bash
+docker-compose up -d
+```
 
-- **web_search**：网络搜索，获取最新信息
-- **web_crawl**：网页爬取，获取网页内容
-- **propose_skill_save**：保存新技能
-- **propose_tool_save**：保存新工具
-- **eval_skill**：评估技能性能
-- **grade_eval**：评估结果评分
+## 技能系统详解
+
+### 技能结构
+每个技能包含以下部分：
+- **SKILL.md**：技能描述和配置
+- **scripts/**：技能实现脚本
+- **references/**：参考资料
+- **evals/**：评估测试
+
+### 技能开发流程
+1. 定义技能目的和功能
+2. 编写技能实现脚本
+3. 创建技能配置文件
+4. 测试技能功能
+5. 部署到系统中
+
+## 工具系统详解
+
+### 工具类型
+- **内置工具**：系统预定义的工具
+- **自定义工具**：用户或开发者创建的工具
+- **第三方工具**：通过 API 集成的外部工具
+
+### 工具调用流程
+1. 用户或技能请求使用工具
+2. 系统验证工具权限
+3. 执行工具操作
+4. 返回工具执行结果
+5. 处理工具执行结果
 
 ## 工作流程
 
@@ -161,7 +297,7 @@ RainClaw 支持以下内置工具：
 RainClaw 采用两层记忆系统：
 
 - **全局记忆** (AGENTS.md)：存储用户偏好和通用模式，跨所有会话持久化
-- **会话记忆** (CONTEXT.md)：存储当前项目/任务上下文，会话结束后自动清理
+- **会话记忆**：存储当前项目/任务上下文，会话结束后自动清理
 
 ## 配置说明
 
@@ -194,15 +330,26 @@ RainClaw 采用两层记忆系统：
 - [LangChain](https://www.langchain.com/)：LLM 应用开发框架
 - [DeepAgents](https://github.com/deepagents-ai/deepagents)：深度代理系统
 - [FastAPI](https://fastapi.tiangolo.com/)：现代 Web 框架
+- [Vue 3](https://vuejs.org/)：前端框架
+- [Tailwind CSS](https://tailwindcss.com/)：实用优先的 CSS 框架
 
 ---
 
 **RainClaw** - 您的智能任务助手，让复杂任务变得简单！
 
-# Docker 镜像构建
- 1. 构建镜像：
- - docker build -t image_name:tag_name .
- 2. 阿里云镜像仓库, 并标签镜像：
- - docker tag image_name:tag_name crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name
- 3. 推送镜像：
- - docker push crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name
+## Docker 镜像构建
+
+1. 构建镜像：
+   ```bash
+   docker build -t image_name:tag_name .
+   ```
+
+2. 阿里云镜像仓库, 并标签镜像：
+   ```bash
+   docker tag image_name:tag_name crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name
+   ```
+
+3. 推送镜像：
+   ```bash
+   docker push crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name
+   ```

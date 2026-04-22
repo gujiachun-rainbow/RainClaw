@@ -318,8 +318,15 @@ class _SafeChatOpenAI(ChatOpenAI):
     def _sanitize_messages(self, args: tuple, kwargs: dict) -> tuple:
         """Flatten content and ensure reasoning_content, return updated args."""
         if args:
-            messages = self._ensure_reasoning_content([_flatten_content(m) for m in args[0]])
-            return (messages, *args[1:]), kwargs
+            if isinstance(args[0], dict) and "messages" in args[0]:
+                # 处理 agent.astream 传递的字典参数
+                messages = self._ensure_reasoning_content([_flatten_content(m) for m in args[0]["messages"]])
+                updated_args = ({"messages": messages}, *args[1:])
+                return updated_args, kwargs
+            else:
+                # 处理传统的消息列表参数
+                messages = self._ensure_reasoning_content([_flatten_content(m) for m in args[0]])
+                return (messages, *args[1:]), kwargs
         if "messages" in kwargs:
             kwargs["messages"] = self._ensure_reasoning_content(
                 [_flatten_content(m) for m in kwargs["messages"]]

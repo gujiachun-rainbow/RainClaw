@@ -7,3 +7,5 @@
 技能触发：所有的技能调用必须通过内置的 Skill 工具（如 Skill(name=“brainstorming”) ）真实执行，严禁仅在对话中口头敷衍或解释。
 
 认知破局：遇到架构冲突、无法定位的死 Bug 或解题卡壳，必须主动使用 problem-solving 类技能（如 when-stuck ）来打破僵局。
+
+readme.md文件描述了项目的主要功能和架构，包括后端、前端、数据库等。
