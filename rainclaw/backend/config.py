@@ -54,6 +54,19 @@ class Settings(BaseSettings):
     lark_app_id: str = os.environ.get("LARK_APP_ID", "")
     lark_app_secret: str = os.environ.get("LARK_APP_SECRET", "")
 
+    # SMTP邮件服务器配置
+    smtp_server: str = os.environ.get("SMTP_SERVER", "smtp.qq.com")
+    smtp_port: int = int(os.environ.get("SMTP_PORT", "465"))
+    smtp_username: str = os.environ.get("SMTP_USERNAME", "767724839@qq.com")
+    smtp_password: str = os.environ.get("SMTP_PASSWORD", "vufotjapjujjbeih")
+    smtp_from_email: str = os.environ.get("SMTP_FROM_EMAIL", "767724839@qq.com")
+
+    # Redis配置
+    redis_host: str = os.environ.get("REDIS_HOST", "localhost")
+    redis_port: int = int(os.environ.get("REDIS_PORT", "6379"))
+    redis_password: str = os.environ.get("REDIS_PASSWORD", "")
+    redis_db: int = int(os.environ.get("REDIS_DB", "0"))
+
     # class Config:
     #     env_prefix = 'APP_'
 

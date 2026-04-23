@@ -3,16 +3,69 @@ from __future__ import annotations
 import time
 import uuid
 import secrets
+import random
 from typing import Any, Optional
 from datetime import datetime
 
 from fastapi import APIRouter, Response, Request, HTTPException, Depends
 from pydantic import BaseModel, Field
 import bcrypt
+import redis
 
 from backend.mongodb.db import db
 from backend.config import settings
 from backend.user.dependencies import get_current_user, require_user, User
+
+# SMTP邮件发送功能
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+# Redis连接
+redis_client = redis.Redis(
+    host=settings.redis_host,
+    port=settings.redis_port,
+    password=settings.redis_password,
+    db=settings.redis_db,
+    decode_responses=True
+)
+
+async def send_email(to: str, subject: str, body: str):
+    """发送邮件"""
+    # 从配置中获取SMTP设置
+    smtp_server = getattr(settings, "smtp_server", "smtp.gmail.com")
+    smtp_port = getattr(settings, "smtp_port", 465)
+    smtp_username = getattr(settings, "smtp_username", "")
+    smtp_password = getattr(settings, "smtp_password", "")
+    smtp_from_email = getattr(settings, "smtp_from_email", smtp_username)
+    
+    if not smtp_username or not smtp_password:
+        return {"success": False, "error": "SMTP configuration not set"}
+    
+    try:
+        # 创建邮件
+        msg = MIMEMultipart()
+        msg["From"] = smtp_from_email
+        msg["To"] = to
+        msg["Subject"] = subject
+        msg.attach(MIMEText(body, "plain", "utf-8"))
+        
+        # 连接SMTP服务器并发送邮件
+        if smtp_port == 465:
+            # 使用SSL
+            server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        else:
+            # 使用TLS
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+        
+        server.login(smtp_username, smtp_password)
+        server.send_message(msg)
+        server.quit()
+        
+        return {"success": True, "message": f"Email sent successfully to {to}"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -30,6 +83,16 @@ class RegisterRequest(BaseModel):
     email: str
     password: str
     username: Optional[str] = None
+    verification_code: str
+
+class SendVerificationCodeRequest(BaseModel):
+    email: str
+    purpose: str = "register"  # register or reset_password
+
+class ResetPasswordRequest(BaseModel):
+    email: str
+    verification_code: str
+    new_password: str
 
 class AuthUser(BaseModel):
     id: str
@@ -175,15 +238,74 @@ async def login(body: LoginRequest, response: Response):
         ).model_dump()
     )
 
+@router.post("/send-verification-code", response_model=ApiResponse)
+async def send_verification_code(body: SendVerificationCodeRequest):
+    email = body.email.strip()
+    if not email:
+        return ApiResponse(code=400, msg="Email required")
+
+    # 检查邮箱是否已存在，根据目的不同逻辑不同
+    existing = await db.get_collection("users").find_one({"email": email})
+    if body.purpose == "register":
+        if existing:
+            return ApiResponse(code=400, msg="Email already registered")
+    elif body.purpose == "reset_password":
+        if not existing:
+            return ApiResponse(code=400, msg="Email not found")
+
+    # 生成6位数验证码
+    code = ''.join(random.choices('0123456789', k=6))
+    expires_at = int(time.time()) + 300  # 5分钟过期
+
+    # 存储验证码到Redis，包含目的
+    redis_key = f"verification_code:{email}:{body.purpose}"
+    redis_client.setex(
+        redis_key,
+        300,  # 5分钟过期
+        code
+    )
+
+    # 发送验证码邮件
+    if body.purpose == "register":
+        subject = "RainClaw 注册验证码"
+        body_content = f"您的注册验证码是：{code}，有效期5分钟。请勿向他人泄露此验证码。"
+    else:
+        subject = "RainClaw 重置密码验证码"
+        body_content = f"您的重置密码验证码是：{code}，有效期5分钟。请勿向他人泄露此验证码。"
+    result = await send_email(
+        to=email,
+        subject=subject,
+        body=body_content
+    )
+
+    if not result.get("success"):
+        return ApiResponse(code=500, msg="Failed to send verification code")
+
+    return ApiResponse(msg="Verification code sent successfully")
+
 @router.post("/register", response_model=ApiResponse)
 async def register(body: RegisterRequest):
     username = (body.username or body.email or "").strip()
     if not username:
         return ApiResponse(code=400, msg="Username/email required")
 
-    existing = await db.get_collection("users").find_one({"username": username})
-    if existing:
+    # 检查邮箱唯一性
+    existing_email = await db.get_collection("users").find_one({"email": body.email})
+    if existing_email:
+        return ApiResponse(code=400, msg="Email already registered")
+
+    # 检查用户名唯一性
+    existing_username = await db.get_collection("users").find_one({"username": username})
+    if existing_username:
         return ApiResponse(code=400, msg="Username already exists")
+
+    # 验证验证码
+    redis_key = f"verification_code:{body.email}:register"
+    stored_code = redis_client.get(redis_key)
+    if not stored_code:
+        return ApiResponse(code=400, msg="Verification code not found or expired")
+    if stored_code != body.verification_code:
+        return ApiResponse(code=400, msg="Invalid verification code")
 
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(body.password.encode('utf-8'), salt).decode('utf-8')
@@ -205,6 +327,10 @@ async def register(body: RegisterRequest):
     }
     
     await db.get_collection("users").insert_one(new_user)
+
+    # 删除使用过的验证码
+    redis_key = f"verification_code:{body.email}:register"
+    redis_client.delete(redis_key)
 
     access_token = secrets.token_urlsafe(32)
     refresh_token = secrets.token_urlsafe(48)
@@ -317,6 +443,43 @@ async def change_password(body: ChangePasswordRequest, current_user: User = Depe
     )
     return ApiResponse(data={"ok": True})
 
+
+@router.post("/reset-password", response_model=ApiResponse)
+async def reset_password(body: ResetPasswordRequest):
+    email = body.email.strip()
+    verification_code = body.verification_code.strip()
+    new_password = body.new_password.strip()
+
+    if not email or not verification_code or not new_password:
+        return ApiResponse(code=400, msg="Email, verification code and new password are required")
+
+    # 验证验证码
+    redis_key = f"verification_code:{email}:reset_password"
+    stored_code = redis_client.get(redis_key)
+    if not stored_code:
+        return ApiResponse(code=401, msg="Invalid or expired verification code")
+
+    if stored_code != verification_code:
+        return ApiResponse(code=401, msg="Invalid verification code")
+
+    # 检查用户是否存在
+    user_doc = await db.get_collection("users").find_one({"email": email})
+    if not user_doc:
+        return ApiResponse(code=404, msg="User not found")
+
+    # 哈希新密码
+    hashed = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+    # 更新密码
+    await db.get_collection("users").update_one(
+        {"_id": str(user_doc["_id"])},
+        {"$set": {"password_hash": hashed, "updated_at": int(time.time())}},
+    )
+
+    # 删除使用过的验证码
+    redis_client.delete(redis_key)
+
+    return ApiResponse(msg="Password reset successfully")
 
 @router.post("/change-fullname", response_model=ApiResponse)
 async def change_fullname(body: ChangeFullnameRequest, current_user: User = Depends(require_user)) -> ApiResponse:

@@ -98,7 +98,14 @@ export function useAuth() {
       
       return response
     } catch (error: any) {
-      authError.value = error.message || 'Login failed'
+      // Handle error message internationalization
+      if (error.message === 'Invalid username or password') {
+        authError.value = 'Authentication failed, please try again'
+      } else if (error.message === 'User is deactivated') {
+        authError.value = 'Account is deactivated'
+      } else {
+        authError.value = error.message || 'Login failed'
+      }
       throw error
     } finally {
       isLoading.value = false

@@ -150,8 +150,11 @@ const handleSendCode = async () => {
   isLoading.value = true
 
   try {
-    // Call the API to send verification code
-    await sendVerificationCode({ email: formData.value.email })
+    // Call the API to send verification code with reset_password purpose
+    await sendVerificationCode({ 
+      email: formData.value.email,
+      purpose: 'reset_password'
+    })
     
     // Switch to verification step
     currentStep.value = 'verification'
@@ -160,7 +163,15 @@ const handleSendCode = async () => {
     console.log('Verification code sent to:', formData.value.email)
   } catch (error: any) {
     console.error('Send verification code failed:', error)
-    showErrorToast(t('Failed to send verification code. Please try again.'))
+    // Handle error message internationalization
+    const errorMessage = error.message || 'Failed to send verification code'
+    if (errorMessage === 'Email not found') {
+      showErrorToast(t('Email not found. Please check your email address.'))
+    } else if (errorMessage === 'Email required') {
+      showErrorToast(t('Please enter a valid email address'))
+    } else {
+      showErrorToast(t('Failed to send verification code. Please try again.'))
+    }
   } finally {
     isLoading.value = false
   }

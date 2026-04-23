@@ -287,13 +287,24 @@ const startResendCooldown = () => {
 const handleResendCode = async () => {
   if (resendCooldown.value > 0) return
 
-    // Call the real API to send verification code
-    sendVerificationCode({ email: props.email }).then(() => {
+    // Call the real API to send verification code with reset_password purpose
+    sendVerificationCode({ 
+      email: props.email,
+      purpose: 'reset_password'
+    }).then(() => {
       showSuccessToast(t('Verification code sent again'))
       console.log('Resend verification code to:', props.email)
     }).catch((error: any) => {
       console.error('Resend verification code failed:', error)
-      showErrorToast(t('Failed to resend verification code. Please try again.') + ': ' + error.response?.data?.message || error.message || 'Unknown error')
+      // Handle error message internationalization
+      const errorMessage = error.message || 'Failed to send verification code'
+      if (errorMessage === 'Email not found') {
+        showErrorToast(t('Email not found. Please check your email address.'))
+      } else if (errorMessage === 'Email required') {
+        showErrorToast(t('Please enter a valid email address'))
+      } else {
+        showErrorToast(t('Failed to resend verification code. Please try again.'))
+      }
     })
     startResendCooldown()
 }

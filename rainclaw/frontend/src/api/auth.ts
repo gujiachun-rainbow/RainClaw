@@ -35,6 +35,7 @@ export interface RegisterRequest {
   fullname: string;
   email: string;
   password: string;
+  verification_code: string;
 }
 
 /**
@@ -120,6 +121,7 @@ export interface AccessTokenResponse {
  */
 export interface SendVerificationCodeRequest {
   email: string;
+  purpose?: string; // register or reset_password
 }
 
 /**

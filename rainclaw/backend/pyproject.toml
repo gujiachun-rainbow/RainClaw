@@ -26,7 +26,8 @@ dependencies = [
     "langchain==1.2.15",
     "langgraph==1.1.6",
     "langchain-community==0.4.1",
-    "langchain-openai==1.1.13",
+    "langchain-openai==1.1.14",
+    "redis==7.4.0",
 ]
 
 [tool.setuptools.packages.find]

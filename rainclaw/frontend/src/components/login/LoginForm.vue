@@ -16,7 +16,7 @@
                 <input v-model="formData.email"
                   class="rounded-xl overflow-hidden text-sm leading-[22px] text-[var(--text-primary)] h-10 disabled:cursor-not-allowed placeholder:text-[var(--text-disable)] bg-white dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 pt-1 pr-1.5 pb-1 pl-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all duration-200 w-full"
                   :class="{ 'ring-1 ring-[var(--function-error)]': validationErrors.email }" id="email"
-                  placeholder="mail@domain.com or username" type="text" :disabled="isLoading" @input="validateField('email')"
+                  placeholder="mail@domain.com" type="text" :disabled="isLoading" @input="validateField('email')"
                   @blur="validateField('email')">
                 <div
                   class="text-[13px] text-[var(--function-error)] leading-[18px] overflow-hidden transition-all duration-300 ease-out"
@@ -78,7 +78,7 @@
         </div>
 
         <!-- Toggle to register -->
-        <div v-if="hasRegister" class="text-center text-[13px] leading-[18px] text-[var(--text-tertiary)] mt-[8px]">
+        <div class="text-center text-[13px] leading-[18px] text-[var(--text-tertiary)] mt-[8px]">
           <span>{{ t('Don\'t have an account?') }}</span>
           <span
             class="ms-[8px] text-[var(--text-secondary)] cursor-pointer select-none hover:opacity-80 active:opacity-70 transition-all underline"
@@ -110,7 +110,6 @@ const emits = defineEmits<{
 }>()
 
 const { login, isLoading, authError } = useAuth()
-const hasRegister = ref(false)
 const defaultCredentials = ref<{ username: string; password: string } | null>(null)
 
 // Form state
@@ -202,15 +201,12 @@ const handleSubmit = async () => {
     emits('success')
   } catch (error: any) {
     console.error('Login failed:', error)
-    // Display error message using toast
-    showErrorToast(authError.value || t('Login failed, please try again'))
+    // Display error message using toast with internationalization
+    showErrorToast(t(authError.value || 'Login failed, please try again'))
   }
 }
 
 onMounted(async () => {
-  const authProvider = await getCachedAuthProvider()
-  hasRegister.value = authProvider === 'password'
-
   try {
     const result = await checkDefaultPassword()
     if (result.is_default && result.username && result.password) {

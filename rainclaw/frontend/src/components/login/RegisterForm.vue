@@ -45,6 +45,37 @@
                 </div>
               </div>
 
+              <!-- Verification Code field -->
+              <div class="flex flex-col items-start">
+                <div class="w-full flex items-center justify-between gap-[12px] mb-[8px]">
+                  <label for="verificationCode"
+                    class="text-[13px] text-[var(--text-primary)] font-medium after:content-[&quot;*&quot;] after:text-[var(--function-error)] after:ml-[4px]">
+                    <span>{{ t('Verification Code') }}</span>
+                  </label>
+                </div>
+                <div class="w-full flex gap-[12px]">
+                  <input v-model="formData.verificationCode"
+                    class="rounded-xl overflow-hidden text-sm leading-[22px] text-[var(--text-primary)] h-10 disabled:cursor-not-allowed placeholder:text-[var(--text-disable)] bg-white dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 pt-1 pr-1.5 pb-1 pl-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all duration-200 flex-1"
+                    :class="{ 'ring-1 ring-[var(--function-error)]': validationErrors.verificationCode }" id="verificationCode"
+                    placeholder="Enter verification code" type="text" :disabled="isLoading || isSendingCode"
+                    @input="validateField('verificationCode')" @blur="validateField('verificationCode')">
+                  <button type="button"
+                    class="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors h-10 px-[16px] rounded-[10px] gap-[6px] text-sm"
+                    :class="(!isLoading && !isSendingCode && !countdown) ? 'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white hover:shadow-xl hover:shadow-indigo-500/25 active:scale-[0.98]' : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed shadow-none'"
+                    :disabled="isLoading || isSendingCode || countdown > 0 || !formData.email || !!validationErrors.email"
+                    @click="sendVerificationCode">
+                    <LoaderCircle v-if="isSendingCode" :size="16" class="animate-spin" />
+                    <span v-else-if="countdown > 0">{{ countdown }}s</span>
+                    <span v-else>{{ t('Send Code') }}</span>
+                  </button>
+                </div>
+                <div
+                  class="text-[13px] text-[var(--function-error)] leading-[18px] overflow-hidden transition-all duration-300 ease-out"
+                  :class="validationErrors.verificationCode ? 'opacity-100 max-h-[60px] mt-[2px]' : 'opacity-0 max-h-0 mt-0'">
+                  {{ validationErrors.verificationCode }}
+                </div>
+              </div>
+
               <!-- Password field -->
               <div class="flex flex-col items-start">
                 <div class="w-full flex items-center justify-between gap-[12px] mb-[8px]">
@@ -157,11 +188,17 @@ const formData = ref({
   fullname: '',
   email: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  verificationCode: ''
 })
 
 // Validation errors
 const validationErrors = ref<Record<string, string>>({})
+
+// Verification code related state
+const isSendingCode = ref(false)
+const countdown = ref(0)
+let countdownTimer: number | null = null
 
 // Clear form
 const clearForm = () => {
@@ -169,9 +206,63 @@ const clearForm = () => {
     fullname: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    verificationCode: ''
   }
   validationErrors.value = {}
+  resetCountdown()
+}
+
+// Reset countdown
+const resetCountdown = () => {
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+  countdown.value = 0
+}
+
+// Start countdown
+const startCountdown = () => {
+  countdown.value = 60
+  countdownTimer = window.setInterval(() => {
+    if (countdown.value > 0) {
+      countdown.value--
+    } else {
+      resetCountdown()
+    }
+  }, 1000)
+}
+
+// Send verification code
+const sendVerificationCode = async () => {
+  if (!formData.value.email || validationErrors.value.email) {
+    return
+  }
+
+  try {
+    isSendingCode.value = true
+    const response = await fetch('/api/v1/auth/send-verification-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: formData.value.email })
+    })
+
+    const result = await response.json()
+    if (result.code === 0) {
+      showSuccessToast(t('Verification code sent successfully!'))
+      startCountdown()
+    } else {
+      showErrorToast(result.msg || t('Failed to send verification code'))
+    }
+  } catch (error) {
+    console.error('Failed to send verification code:', error)
+    showErrorToast(t('Failed to send verification code'))
+  } finally {
+    isSendingCode.value = false
+  }
 }
 
 // Validate single field
@@ -205,6 +296,14 @@ const validateField = (field: string) => {
     }
   }
 
+  if (field === 'verificationCode') {
+    if (!formData.value.verificationCode.trim()) {
+      errors.verificationCode = t('Verification code is required')
+    } else if (formData.value.verificationCode.length !== 6) {
+      errors.verificationCode = t('Verification code must be 6 digits')
+    }
+  }
+
   // Update error state
   Object.keys(errors).forEach(key => {
     validationErrors.value[key] = errors[key]
@@ -232,6 +331,13 @@ const validateForm = () => {
     validationErrors.value.confirmPassword = t('Passwords do not match')
   }
 
+  // Validate verification code
+  if (!formData.value.verificationCode.trim()) {
+    validationErrors.value.verificationCode = t('Verification code is required')
+  } else if (formData.value.verificationCode.length !== 6) {
+    validationErrors.value.verificationCode = t('Verification code must be 6 digits')
+  }
+
   return Object.keys(validationErrors.value).length === 0
 }
 
@@ -240,7 +346,8 @@ const isFormValid = computed(() => {
   const hasRequiredFields = formData.value.fullname.trim() && 
                            formData.value.email.trim() && 
                            formData.value.password.trim() && 
-                           formData.value.confirmPassword.trim()
+                           formData.value.confirmPassword.trim() &&
+                           formData.value.verificationCode.trim()
 
   const hasNoErrors = Object.keys(validationErrors.value).length === 0
 
@@ -257,7 +364,8 @@ const handleSubmit = async () => {
     await register({
       fullname: formData.value.fullname,
       email: formData.value.email,
-      password: formData.value.password
+      password: formData.value.password,
+      verification_code: formData.value.verificationCode
     })
     
     // Registration success message

@@ -107,6 +107,10 @@ services:
       FILE_DOWNLOAD_ALLOWED_PREFIXES: /tmp,/app,/home/rainclaw
       TZ: Asia/Shanghai
       AUTH_PROVIDER: local
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
       BOOTSTRAP_ADMIN_ENABLED: "true"
       BOOTSTRAP_ADMIN_USERNAME: admin
       BOOTSTRAP_ADMIN_PASSWORD: admin123

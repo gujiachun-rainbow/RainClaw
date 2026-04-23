@@ -141,8 +141,8 @@ export default {
   'Login to': '登录',
   'Register to': '注册',
   'Full Name': '姓名',
-  'Email or Username': '邮箱或用户名',
-  'Please enter a valid email or username': '请输入有效的邮箱或用户名',
+  'Email or Username': '邮箱',
+  'Please enter a valid email or username': '请输入有效的邮箱',
   'Email': '邮箱',
   'Password': '密码',
   'Enter your full name': '输入您的姓名',
@@ -157,7 +157,8 @@ export default {
   'Username': '用户名',
   'Login successful! Welcome back': '登录成功！欢迎回来',
   'Registration successful! Welcome to RainClaw': '注册成功！欢迎使用 RainClaw',
-  'Authentication failed, please try again': '认证失败，请重试',
+  'Authentication failed, please try again': '邮箱或密码错误，请重试',
+  'Account is deactivated': '账户已被禁用',
   'Passwords do not match': '两次密码输入不一致',
   // Validation error messages
   'Username must be at least 3 characters long': '用户名长度至少为3个字符',
@@ -198,6 +199,7 @@ export default {
   'Back to Login': '返回登录',
   'Reset link sent to your email': '重置链接已发送到您的邮箱',
   'Failed to send reset link. Please try again.': '发送重置链接失败，请重试。',
+  'Email not found. Please check your email address.': '邮箱不存在。请检查您的邮箱地址。',
   // Language Selection
   'Select language': '选择语言',
   'Simplified Chinese': '简体中文',
@@ -210,6 +212,8 @@ export default {
   'Waiting for result...': '等待结果...',
   // Reset Password Verification
   'Verification code sent to': '验证码已发送至',
+  'Verification Code': '验证码',
+  'Send Code': '发送验证码',
   'Enter 6-digit verification code': '输入6位验证码',
   'Resend': '重发',
   'Verification code is required': '验证码为必填项',
@@ -534,5 +538,8 @@ export default {
   'Yesterday': '昨天',
   'Last 7 Days': '过去 7 天',
   'Last 30 Days': '过去 30 天',
-  'Older': '更早'
+  'Older': '更早',
+  'Sign in to continue your research': '登录以继续您的研究',
+  'Enter your email to receive a reset link': '输入您的邮箱以获取重置链接',
+  'Create your account to get started': '创建您的账户以开始使用'
 } 

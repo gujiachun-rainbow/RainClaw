@@ -19,11 +19,6 @@
       </button>
     </div>
 
-    <!-- WeChat panel -->
-    <div v-show="activeSubTab === 'wechat'">
-      <WeChatClawBotSettings :is-admin="props.isAdmin" />
-    </div>
-
     <!-- Feishu panel -->
     <div v-show="activeSubTab === 'feishu'" class="flex flex-col gap-5">
       <div v-if="loading" class="flex justify-center py-12">
@@ -211,16 +206,14 @@ import { computed, onMounted, reactive, ref } from 'vue';
 import { Loader2 } from 'lucide-vue-next';
 import { getIMSystemSettings, updateIMSystemSettings, type IMSystemSettings, type UpdateIMSystemSettingsRequest } from '@/api/im';
 import { showErrorToast, showSuccessToast } from '@/utils/toast';
-import WeChatClawBotSettings from './WeChatClawBotSettings.vue';
 
-type SubTabKey = 'wechat' | 'feishu';
+type SubTabKey = 'feishu';
 
 const subTabs = [
-  { key: 'wechat' as SubTabKey, label: '微信' },
   { key: 'feishu' as SubTabKey, label: '飞书' },
 ];
 
-const activeSubTab = ref<SubTabKey>('wechat');
+const activeSubTab = ref<SubTabKey>('feishu');
 
 const props = withDefaults(defineProps<{ isAdmin?: boolean }>(), {
   isAdmin: false,
@@ -248,7 +241,6 @@ const form = reactive<IMSystemSettings>({
   lark_app_id: '',
   has_lark_app_secret: false,
   lark_app_secret_masked: '',
-  wechat_enabled: false,
   im_progress_mode: 'card_entity',
   im_progress_detail_level: 'detailed',
   im_progress_interval_ms: 1200,

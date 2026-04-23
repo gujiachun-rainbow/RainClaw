@@ -139,7 +139,7 @@ export default {
   'Username': 'Username',
   'Login successful! Welcome back': 'Login successful! Welcome back',
   'Registration successful! Welcome to RainClaw': 'Registration successful! Welcome to RainClaw',
-  'Authentication failed, please try again': 'Authentication failed, please try again',
+  'Authentication failed, please try again': 'Email or password incorrect, please try again',
   'Passwords do not match': 'Passwords do not match',
   // Validation error messages
   'Full name must be at least 2 characters long': 'Full name must be at least 2 characters long',
@@ -178,6 +178,7 @@ export default {
   'Back to Login': 'Back to Login',
   'Reset link sent to your email': 'Reset link sent to your email',
   'Failed to send reset link. Please try again.': 'Failed to send reset link. Please try again.',
+  'Email not found. Please check your email address.': 'Email not found. Please check your email address.',
   // Language Selection
   'Select language': 'Select language',
   'Simplified Chinese': 'Simplified Chinese',
@@ -190,6 +191,8 @@ export default {
   'Waiting for result...': 'Waiting for result...',
   // Reset Password Verification
   'Verification code sent to': 'Verification code sent to',
+  'Verification Code': 'Verification Code',
+  'Send Code': 'Send Code',
   'Enter 6-digit verification code': 'Enter 6-digit verification code',
   'Resend': 'Resend',
   'Verification code is required': 'Verification code is required',
@@ -481,5 +484,10 @@ export default {
   'Yesterday': 'Yesterday',
   'Last 7 Days': 'Last 7 Days',
   'Last 30 Days': 'Last 30 Days',
-  'Older': 'Older'
+  'Older': 'Older',
+  'Sign in to continue your research': 'Sign in to continue your research',
+  'Enter your email to receive a reset link': 'Enter your email to receive a reset link',
+  'Create your account to get started': 'Create your account to get started',
+  'Email or Username': 'Email',
+  'Please enter a valid email or username': 'Please enter a valid email'
 } 
