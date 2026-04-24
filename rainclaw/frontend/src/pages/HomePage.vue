@@ -199,7 +199,7 @@ function startErasing() {
 
 const quickPrompts = computed(() => [
   {
-    icon: '🧬',
+    icon: '📅',
     title: t('Protein & Disease'),
     desc: t('Multi-step target analysis pipeline'),
     query: t('I am studying Alzheimer\'s disease (EFO_0000249). Please: 1) Find the top 5 drug targets associated with this disease 2) Query the protein function of the top-ranked target 3) Compile the findings into a comprehensive PDF research report'),
@@ -208,7 +208,7 @@ const quickPrompts = computed(() => [
     gradient: 'from-blue-500 to-indigo-600',
   },
   {
-    icon: '💊',
+    icon: '📧',
     title: t('Drug Safety Profile'),
     desc: t('FDA adverse event analysis with data visualization'),
     query: t('Analyze the drug safety profile of aspirin: 1) Query the top 10 most common adverse reactions from the FDA FAERS database 2) Analyze the results and generate a detailed Excel spreadsheet of adverse reactions sorted by report count'),
@@ -217,7 +217,7 @@ const quickPrompts = computed(() => [
     gradient: 'from-emerald-500 to-teal-600',
   },
   {
-    icon: '🧪',
+    icon: '📄',
     title: t('Compound ADMET'),
     desc: t('Multi-dimensional drug property prediction'),
     query: t('Evaluate the drug-likeness of compound CC(=O)Oc1ccccc1C(=O)O (aspirin SMILES): predict its BBB penetrance, toxicity, and bioavailability using ADMET tools, then produce a detailed Word document with the comprehensive assessment'),
@@ -226,7 +226,7 @@ const quickPrompts = computed(() => [
     gradient: 'from-violet-500 to-fuchsia-600',
   },
   {
-    icon: '📊',
+    icon: '📈',
     title: t('Literature & Data'),
     desc: t('Cross-database research synthesis'),
     query: t('Conduct a research overview on BRCA1 gene and breast cancer: 1) Search for relevant publications about BRCA1 mutations 2) Query BRCA1 protein (P38398) function from UniProt 3) Find top drug targets for breast cancer (EFO_0000305) 4) Synthesize all findings into a comprehensive PDF research report'),
