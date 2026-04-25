@@ -270,6 +270,26 @@ RainClaw/
 
 ### Docker 镜像启动（推荐）
 
+#### 安装 Docker Desktop
+
+**Windows 系统：**
+1. 访问 [Docker Desktop 官方下载页面](https://www.docker.com/products/docker-desktop)
+2. 下载适用于 Windows 的 Docker Desktop 安装包
+3. 运行安装程序并按照提示完成安装
+4. 安装完成后，启动 Docker Desktop
+
+**macOS 系统：**
+1. 访问 [Docker Desktop 官方下载页面](https://www.docker.com/products/docker-desktop)
+2. 下载适用于 macOS 的 Docker Desktop 安装包
+3. 打开下载的 .dmg 文件并将 Docker 图标拖到 Applications 文件夹
+4. 启动 Docker Desktop 并按照提示完成初始化
+
+**Linux 系统：**
+1. 按照 [Docker 官方文档](https://docs.docker.com/engine/install/) 安装 Docker Engine
+2. 安装 Docker Compose（如果未包含在 Docker Engine 中）
+
+安装完成后，确保 Docker 服务正在运行，然后执行以下命令启动服务：
+
 #### 启动所有服务
 ```bash
 docker-compose up -d
