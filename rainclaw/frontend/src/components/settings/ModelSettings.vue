@@ -359,7 +359,7 @@ const PROVIDER_CONFIG: Record<string, { base_url: string; models: string[] }> = 
   },
   deepseek: {
     base_url: 'https://api.deepseek.com',
-    models: ['deepseek-chat', 'deepseek-reasoner'],
+    models: ['deepseek-chat', 'deepseek-reasoner', 'deepseek-v4-pro', 'deepseek-v4-flash'],
   },
   gemini: {
     base_url: '',

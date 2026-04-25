@@ -553,3 +553,8 @@ RainClaw 采用两层记忆系统：
    ```bash
    docker push crpi-st7s4gabmi4ym1qo.cn-shanghai.personal.cr.aliyuncs.com/rainclaw/image_name:tag_name
    ```
+
+## 沙箱浏览器访问
+```bash
+http://localhost:18080/vnc/index.html?autoconnect=true
+```
