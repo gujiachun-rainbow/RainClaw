@@ -266,79 +266,195 @@ RainClaw/
 - lark-oapi@==1.5.3
 - tavily-python@==0.7.23
 
-## 安装指南
+## 使用指南
 
-### 1. 克隆项目
+### Docker 镜像启动（推荐）
 
+#### 启动所有服务
 ```bash
-git clone https://github.com/yourusername/RainClaw.git
-cd RainClaw
+docker-compose up -d
 ```
 
-### 2. 后端安装
-
+#### 重新启动后端
 ```bash
-cd rainclaw/backend
-# 创建虚拟环境
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
+docker-compose up -d --build backend
+```
+
+#### 重新启动前端
+```bash
+npm run build
+docker-compose up -d --build frontend
+```
+### 本地启动
+
+#### 启动 Redis
+```bash
+# 安装 Redis（如果未安装）
+# Windows: 下载并安装 Redis 或使用 WSL
+# Linux: sudo apt install redis-server
+# MacOS: brew install redis
+
+# 启动 Redis 服务
+# Windows (WSL): sudo service redis-server start
+# Linux: sudo service redis-server start
+# MacOS: brew services start redis
+```
+
+#### 启动 MongoDB
+```bash
+# 安装 MongoDB（如果未安装）
+# Windows: 下载并安装 MongoDB Community Server
+# Linux: sudo apt install mongodb
+# MacOS: brew install mongodb-community
+
+# 启动 MongoDB 服务
+# Windows: net start MongoDB
+# Linux: sudo service mongodb start
+# MacOS: brew services start mongodb-community
+
+# 创建用户和数据库
+mongo --eval "use admin; db.createUser({user: 'rainclaw', pwd: 'Yp51Bi1eEjC77sAt', roles: [{role: 'root', db: 'admin'}]})"
+```
+
+#### 启动 SearXNG
+```bash
+# 克隆 SearXNG 仓库
+git clone https://github.com/searxng/searxng.git
+cd searxng
+
 # 安装依赖
 pip install -r requirements.txt
+
+# 配置 settings.yml
+cp searxng/settings.yml.sample searxng/settings.yml
+
+# 启动 SearXNG
+python -m searxng
 ```
 
-### 3. 前端安装
+#### 启动 WebSearch
+```bash
+cd rainclaw/websearch
+# 安装依赖
+pip install -r requirements.txt
 
+# 设置环境变量
+export SEARXNG_HOST=localhost
+export SEARXNG_PORT=8888
+export API_HOST="0.0.0.0"
+export API_PORT=8068
+export API_KEY="fdsfkjikmii"
+
+# 启动 WebSearch 服务
+python main.py
+```
+
+#### 启动 Sandbox
+```bash
+cd rainclaw/sandbox
+# 安装依赖
+pip install -r requirements.txt
+
+# 设置环境变量
+export WEBSEARCH_URL=http://localhost:8068
+
+# 启动 Sandbox 服务
+python main.py
+```
+
+#### 启动后端
+```bash
+cd rainclaw/backend
+# 安装依赖
+pip install -r requirements.txt
+
+# 设置环境变量
+export SANDBOX_REST_URL=http://localhost:8080
+export WORKSPACE_DIR=/home/rainclaw
+export API_KEY={API_KEY:-}
+export API_BASE=https://api.deepseek.com/v1
+export MODEL_NAME=deepseek-chat
+export TEMPERATURE=0.7
+export MAX_TOKENS=2000
+export LOG_LEVEL=INFO
+export FILE_DOWNLOAD_ALLOWED_PREFIXES=/tmp,/app,/home/rainclaw
+export AUTH_PROVIDER=local
+export REDIS_HOST=localhost
+export REDIS_PORT=6379
+export REDIS_PASSWORD=""
+export REDIS_DB=0
+export BOOTSTRAP_ADMIN_ENABLED="true"
+export BOOTSTRAP_ADMIN_USERNAME=admin
+export BOOTSTRAP_ADMIN_PASSWORD=admin123
+export BOOTSTRAP_ADMIN_FULLNAME=Administrator
+export BOOTSTRAP_ADMIN_EMAIL=admin@localhost
+export BOOTSTRAP_UPDATE_ADMIN_PASSWORD="true"
+export MONGODB_HOST=localhost
+export MONGODB_PORT=27017
+export MONGODB_USER=rainclaw
+export MONGODB_PASSWORD=Yp51Bi1eEjC77sAt
+export TASK_SERVICE_API_KEY={TASK_SERVICE_API_KEY:-}
+export WEBSEARCH_API_KEY="fdsfkjikmii"
+export WEBSEARCH_BASE_URL=http://localhost:8068
+export WEBSEARCH_URL=http://localhost:8068
+export DIAGNOSTIC_MODE="1"
+export IM_ENABLED="true"
+export IM_RESPONSE_TIMEOUT=300
+export IM_MAX_MESSAGE_LENGTH=4000
+export LARK_ENABLED="true"
+export LARK_APP_ID={LARK_APP_ID-}
+export LARK_APP_SECRET={LARK_APP_SECRET-}
+
+# 启动后端服务
+uvicorn main:app --reload
+```
+
+#### 启动任务调度服务
+```bash
+cd rainclaw/task-service
+# 安装依赖
+pip install -r requirements.txt
+
+# 设置环境变量
+export TZ=Asia/Shanghai
+export DISPLAY_TIMEZONE=Asia/Shanghai
+export MONGODB_HOST=localhost
+export MONGODB_PORT=27017
+export MONGODB_DB=ai_agent
+export MONGODB_USER=rainclaw
+export MONGODB_PASSWORD=Yp51Bi1eEjC77sAt
+export REDIS_URL=redis://localhost:6379/0
+export CHAT_SERVICE_URL=http://localhost:8000
+export CHAT_SERVICE_API_KEY={TASK_SERVICE_API_KEY:-}
+export API_KEY={API_KEY:-}
+export API_BASE=https://api.deepseek.com/v1
+export MODEL_NAME=deepseek-chat
+
+# 启动任务调度 API
+uvicorn app.main:app --host 0.0.0.0 --port 8001
+
+# 另开终端启动 Celery Worker
+cd rainclaw/task-service
+celery -A app.celery_app worker --loglevel=info
+
+# 另开终端启动 Celery Beat
+cd rainclaw/task-service
+celery -A app.celery_app beat --loglevel=info
+```
+
+#### 前端开发
 ```bash
 cd rainclaw/frontend
 # 安装依赖
 npm install
-# 构建项目
-npm run build
-```
 
-### 4. 配置环境变量
+# 设置环境变量
+export BACKEND_URL=http://localhost:8000
+export TASK_SERVICE_URL=http://localhost:8001
+export VITE_DISPLAY_TIMEZONE=Asia/Shanghai
 
-创建 `.env` 文件，添加以下配置：
-
-```env
-# 模型配置
-MODEL_DS_NAME=gpt-4o
-MODEL_DS_BASE_URL=https://api.openai.com/v1
-MODEL_DS_API_KEY=your_api_key
-
-# 数据库配置
-MONGODB_URL=mongodb://localhost:27017
-
-# 应用配置
-CONTEXT_WINDOW=128000
-MAX_TOKENS=4096
-```
-
-### 5. 启动服务
-
-#### 后端服务
-
-```bash
-cd rainclaw/backend
-uvicorn main:app --reload
-```
-
-#### 前端开发服务器
-
-```bash
-cd rainclaw/frontend
+# 启动前端开发服务器
 npm run dev
-```
-
-### 6. Docker 部署
-
-使用 docker-compose 快速部署：
-
-```bash
-docker-compose up -d
 ```
 
 ## 技能系统详解
@@ -423,8 +539,7 @@ RainClaw 采用两层记忆系统：
 
 **RainClaw** - 您的智能任务助手，让复杂任务变得简单！
 
-## Docker 镜像构建
-
+## 自定义镜像仓库方法
 1. 构建镜像：
    ```bash
    docker build -t image_name:tag_name .
