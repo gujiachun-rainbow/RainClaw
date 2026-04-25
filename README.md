@@ -236,39 +236,9 @@ RainClaw/
 - **网络搜索**：Tavily API
 - **容器化**：Docker
 
-## 依赖项
-
-### 前端依赖
-- vue@^3.3.4
-- vue-router@^4.5.1
-- vue-i18n@^9.14.4
-- axios@^1.8.4
-- tailwindcss@^3.3.2
-- typescript@^5.6.3
-- vite@^4.3.9
-- monaco-editor@^0.52.2
-- @xterm/xterm@^6.0.0
-- @novnc/novnc@^1.5.0
-- marked@^15.0.8
-- katex@^0.16.38
-- mermaid@^11.13.0
-- framer-motion@^10.12.16
-
-### 后端依赖
-- fastapi@==0.135.3
-- uvicorn[standard]@==0.44.0
-- pydantic@==2.13.0
-- pydantic-settings@==2.13.1
-- motor@==3.7.1
-- langchain@==1.2.15
-- langgraph@==1.1.6
-- deepagents@==0.5.2
-- lark-oapi@==1.5.3
-- tavily-python@==0.7.23
-
 ## 使用指南
 
-### Docker 镜像启动（推荐）
+### 1、Docker 镜像启动（推荐）
 
 #### 安装 Docker Desktop
 
@@ -305,7 +275,7 @@ docker-compose up -d --build backend
 npm run build
 docker-compose up -d --build frontend
 ```
-### 本地启动
+### 2、本地启动
 
 #### 启动 Redis
 ```bash
