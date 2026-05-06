@@ -28,5 +28,5 @@ readme.md文件描述了项目的主要功能和架构，包括后端、前端�
 # 打开沙箱里面的浏览器
 
 ```bash
-http://localhost:18080/vnc/index.html?autoconnect=true
+http://localhost:8080/vnc/index.html?autoconnect=true
 ```

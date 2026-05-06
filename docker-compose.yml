@@ -76,7 +76,7 @@ services:
       - ./rainclaw/backend/builtin_skills:/builtin-skills:ro
       - ./workspace:/home/rainclaw
     ports:
-      - "18080:8080"
+      - "8080:8080"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8080/v1/docs >/dev/null || exit 1"]
@@ -237,6 +237,8 @@ services:
       TASK_SERVICE_URL: http://scheduler_api:8001
       # 任务执行时间展示时区，默认北京时间（与 DISPLAY_TIMEZONE 一致）
       VITE_DISPLAY_TIMEZONE: ${DISPLAY_TIMEZONE:-Asia/Shanghai}
+      # Sandbox 服务端口（与 sandbox 服务的端口映射保持一致）
+      VITE_SANDBOX_PORT: ${SANDBOX_PORT:-8080}
       NPM_CONFIG_REGISTRY: https://registry.npmmirror.com
       NPM_CONFIG_CACHE: /npm-cache
       CHOKIDAR_USEPOLLING: "true"

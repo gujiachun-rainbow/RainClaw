@@ -32,7 +32,7 @@ from deepagents.backends.protocol import (
 
 logger = logging.getLogger(__name__)
 
-_SANDBOX_URL = os.environ.get("SANDBOX_REST_URL", "http://localhost:18080").rstrip("/")
+_SANDBOX_URL = os.environ.get("SANDBOX_REST_URL", "http://localhost:8080").rstrip("/")
 _BASE_WORKSPACE = os.environ.get("WORKSPACE_DIR", "/home/rainclaw")
 _EXECUTE_TIMEOUT = 600
 _MAX_OUTPUT_CHARS = 50000

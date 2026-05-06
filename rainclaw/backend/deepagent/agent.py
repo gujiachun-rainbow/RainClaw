@@ -137,7 +137,7 @@ Your workspace directory is {workspace_dir}/.
 ## Sandbox Boundary
 The sandbox is an isolated execution environment. Scripts running in the sandbox CANNOT import or call your tools directly (`from functions import ...` will FAIL with `ModuleNotFoundError`).
 
-**Data flow**: Use YOUR tools (web_search, web_crawl, tooluniverse_run, etc.) to gather data → save results to workspace files via `write_file` → write sandbox scripts that READ those files. NEVER call your tools from within sandbox scripts.
+**Data flow**: Use YOUR tools (web_search, web_crawl, etc.) to gather data → save results to workspace files via `write_file` → write sandbox scripts that READ those files. NEVER call your tools from within sandbox scripts.
 
 **Large tool results** are automatically saved to `research_data/` files (raw format). To use them in sandbox scripts: `read_file` the data → write a clean JSON file via a Python script with `json.dump()` → sandbox scripts read that clean file.
 
@@ -151,7 +151,7 @@ The sandbox is an isolated execution environment. Scripts running in the sandbox
 
 ### Step 2: Execute
 - If a skill matched → follow the skill's workflow completely.
-- Otherwise, use tools directly. Priority: existing skills > built-in tools > ToolUniverse > web_search.
+- Otherwise, use tools directly. Priority: existing skills > built-in tools > web_search.
 - **Before `propose_tool_save`**: read `/builtin-skills/tool-creator/SKILL.md` first.
 - **Before `propose_skill_save`**: read `/builtin-skills/skill-creator/SKILL.md` first.
 - Build incrementally — one component per tool call. Test via `execute` after writing.
@@ -467,7 +467,6 @@ NEVER use `npx skills`. Use `skills` directly. When installing: `HOME={actual_wo
 ## Task Resources
 - **Existing skill?** → `read_file` the SKILL.md and follow it. Check `/skills/` for local installs first.
 - **Research / reports / reviews / surveys / discoveries?** → `read_file("/skills/deep-research/SKILL.md")` and follow its workflow.
-- **Need a capability?** → Check built-in tools, then `read_file("/builtin-skills/tooluniverse/SKILL.md")`.
 - **PDF processing?** → `read_file("/builtin-skills/pdf/SKILL.md")`. For form filling, also read FORMS.md.
 - **Need external info?** → `web_search` / `web_crawl`.
 - **Create a tool** → `read_file("/builtin-skills/tool-creator/SKILL.md")`. NEVER write to /app/Tools/ directly.

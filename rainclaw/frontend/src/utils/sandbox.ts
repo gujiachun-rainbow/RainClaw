@@ -2,10 +2,10 @@
  * Sandbox URL utilities.
  *
  * The agent-infra/sandbox container exposes port 8080 internally,
- * mapped to 18080 on the host via docker-compose.
+ * mapped to 8080 on the host via docker-compose.
  */
 
-const SANDBOX_PORT = 18080;
+const SANDBOX_PORT = parseInt(import.meta.env.VITE_SANDBOX_PORT || '8080', 10);
 
 export function getSandboxBaseUrl(): string {
   return `${window.location.protocol}//${window.location.hostname}:${SANDBOX_PORT}`;
