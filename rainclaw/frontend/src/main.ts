@@ -20,13 +20,13 @@ import ScienceToolDetail from './pages/ScienceToolDetail.vue'
 import TasksPage from './pages/TasksPage.vue'
 import LoginPage from './pages/LoginPage.vue'
 import MainLayout from './pages/MainLayout.vue'
-import { configure } from "vue-gtag";
+// import { configure } from "vue-gtag";
 import SharePage from './pages/SharePage.vue';
 import ShareLayout from './pages/ShareLayout.vue';
 
-configure({
-  tagId: 'G-XCRZ3HH31S' // Replace with your own Google Analytics tag ID
-})
+// configure({
+//   tagId: 'G-XCRZ3HH31S' // Replace with your own Google Analytics tag ID
+// })
 
 // Create router
 export const router = createRouter({
