@@ -46,6 +46,15 @@
                         <ChevronRight :size="14" class="ml-auto text-gray-300 dark:text-gray-600 group-hover:text-cyan-400 transition-all group-hover:translate-x-0.5" />
                     </div>
 
+                    <div v-if="isAdmin" class="menu-item flex gap-3 items-center px-3 py-2.5 rounded-xl cursor-pointer text-gray-600 dark:text-gray-300 transition-all duration-150 hover:bg-amber-50/80 dark:hover:bg-amber-900/20 hover:text-amber-600 dark:hover:text-amber-400 group"
+                        @click="handleAdminMemoryClick">
+                        <div class="size-8 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center transition-colors group-hover:bg-amber-100 dark:group-hover:bg-amber-900/50">
+                            <Database :size="16" class="text-amber-500" />
+                        </div>
+                        <span class="text-sm font-medium">{{ t('Admin Memory') }}</span>
+                        <ChevronRight :size="14" class="ml-auto text-gray-300 dark:text-gray-600 group-hover:text-amber-400 transition-all group-hover:translate-x-0.5" />
+                    </div>
+
                     <div class="menu-item flex gap-3 items-center px-3 py-2.5 rounded-xl cursor-pointer text-gray-600 dark:text-gray-300 transition-all duration-150 hover:bg-violet-50/80 dark:hover:bg-violet-900/20 hover:text-violet-600 dark:hover:text-violet-400 group"
                         @click="handleSettingsClick">
                         <div class="size-8 rounded-lg bg-violet-50 dark:bg-violet-900/30 flex items-center justify-center transition-colors group-hover:bg-violet-100 dark:group-hover:bg-violet-900/50">
@@ -117,11 +126,11 @@ import { useI18n } from 'vue-i18n';
 import { useAuth } from '../composables/useAuth';
 import { useSettingsDialog } from '../composables/useSettingsDialog';
 import { getCachedAuthProvider } from '../api/auth';
-import { LogOut, User, Settings2, Box, ListTodo, ChevronRight, Brain, Bell, MessageSquare } from 'lucide-vue-next';
+import { LogOut, User, Settings2, Box, ListTodo, ChevronRight, Brain, Bell, MessageSquare, Database } from 'lucide-vue-next';
 
 const router = useRouter();
 const { t } = useI18n();
-const { currentUser, logout } = useAuth();
+const { currentUser, isAdmin, logout } = useAuth();
 const { openSettingsDialog } = useSettingsDialog();
 const authProvider = ref<string | null>(null);
 const isVisible = ref(false);
@@ -139,6 +148,11 @@ const handleAccountClick = () => {
 // Handle Personalization click - open settings dialog with personalization tab
 const handlePersonalizationClick = () => {
     openSettingsDialog('personalization');
+};
+
+// Handle Admin Memory click - open settings dialog with admin-memory tab
+const handleAdminMemoryClick = () => {
+    openSettingsDialog('admin-memory');
 };
 
 // Handle Settings click - open settings dialog with settings tab

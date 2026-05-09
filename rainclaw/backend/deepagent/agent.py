@@ -24,6 +24,7 @@ Skills 架构：
 from __future__ import annotations
 
 import os
+import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -307,6 +308,8 @@ async def get_blocked_tools(user_id: str) -> Set[str]:
 # 创建 Agent
 # ───────────────────────────────────────────────────────────────────
 
+_ADMIN_MEMORY_TIMEOUT = 3600  # 全局记忆文件缓存有效期（1 小时）
+
 async def deep_agent(
     session_id: str,
     model_config: Optional[Dict[str, Any]] = None,
@@ -404,7 +407,8 @@ async def deep_agent(
         agent_kwargs["skills"] = skills_sources
         logger.info(f"[Agent] 已启用 Skills（sources: {skills_sources}, blocked: {blocked_skills}）")
 
-    # 4. 启用跨会话记忆（两层隔离）
+    # 4. 启用跨会话记忆（三层隔离）
+    #    - MongoDB 全局记忆：管理员维护的结构化记忆（所有用户共享）
     #    - 全局 AGENTS.md：用户偏好 + 通用模式（跨所有会话，体量小）
     #    - 会话级 CONTEXT.md：当前项目/任务上下文（会话删除时自动清理）
     _mem_user = user_id or "default_user"
@@ -428,6 +432,71 @@ async def deep_agent(
                     "## Task Notes\n")
         logger.info(f"[Memory] 初始化会话 Context: {_session_mem}")
 
+    # 从 MongoDB 加载管理员维护的全局记忆（scope=null），文件缓存 1 小时
+    _admin_mem_path: Optional[str] = None
+    _admin_md_path = os.path.join(_mem_dir, "ADMIN_GLOBAL_MEMORY.md")
+    _admin_time_path = os.path.join(_mem_dir, "ADMIN_GLOBAL_MEMORY.time.txt")
+    _need_refresh = False
+    if os.path.isfile(_admin_md_path):
+        # 已有缓存文件，检查上次刷新时间
+        try:
+            with open(_admin_time_path, "r") as _f:
+                _last_time = float(_f.read().strip())
+            if time.time() - _last_time >= _ADMIN_MEMORY_TIMEOUT:
+                _need_refresh = True
+        except (FileNotFoundError, ValueError, OSError):
+            _need_refresh = True
+    else:
+        # 无缓存文件，需要查询
+        _need_refresh = True
+
+    if _need_refresh:
+        logger.info("[SYS Memory] 系统记忆需要从数据库获取，进行刷新")
+        try:
+            from backend.mongodb.db import db as _mdb
+            _col = _mdb.get_collection("memory_entries")
+            _cursor = _col.find({"scope": None}).sort("updated_at", -1)
+            _admin_entries = []
+            async for _doc in _cursor:
+                _admin_entries.append(_doc)
+            if _admin_entries:
+                _admin_lines = ["# Admin Global Memory (shared across all users)", ""]
+                _by_cat: dict = {}
+                for _e in _admin_entries:
+                    _cat = _e.get("category", "notes")
+                    _by_cat.setdefault(_cat, []).append(_e.get("content", ""))
+                _cat_labels = {
+                    "preferences": "User Preferences",
+                    "patterns": "General Patterns",
+                    "notes": "Notes",
+                    "custom": "Custom",
+                }
+                for _cat, _items in _by_cat.items():
+                    _label = _cat_labels.get(_cat, _cat.capitalize())
+                    _admin_lines.append(f"## {_label}")
+                    _admin_lines.append("")
+                    for _item in _items:
+                        if _item.strip():
+                            _admin_lines.append(f"- {_item.strip()}")
+                    _admin_lines.append("")
+                _admin_content = "\n".join(_admin_lines)
+                with open(_admin_md_path, "w", encoding="utf-8") as _f:
+                    _f.write(_admin_content)
+                with open(_admin_time_path, "w") as _f:
+                    _f.write(str(time.time()))
+                _admin_mem_path = _admin_md_path
+                logger.info(f"[SYS Memory] 已加载 {len(_admin_entries)} 条全局记忆到 {_admin_md_path}")
+            else:
+                logger.info("[SYS Memory] 无全局记忆条目")
+        except Exception as _exc:
+            logger.warning(f"[SYS Memory] 加载 MongoDB 全局记忆失败: {_exc}")
+    else:
+        logger.info("[SYS Memory] 系统记忆缓存有效，直接使用")
+        # 缓存有效，直接使用现有文件
+        if os.path.isfile(_admin_md_path):
+            _admin_mem_path = _admin_md_path
+            logger.debug(f"[SYS Memory] 使用缓存文件: {_admin_md_path}")
+
     _MAX_MEMORY_CHARS = 4000
     _mem_files_to_use = []
     for _mf in [_global_mem, _session_mem]:
@@ -449,6 +518,10 @@ async def deep_agent(
                 _mem_files_to_use.append(_mf)
         except Exception:
             _mem_files_to_use.append(_mf)
+
+    # 在 AGENTS.md 和 CONTEXT.md 之间插入 admin 全局记忆
+    if _admin_mem_path:
+        _mem_files_to_use.insert(1, _admin_mem_path)
 
     agent_kwargs["memory"] = _mem_files_to_use
     logger.info(f"[Memory] 已启用记忆: {[os.path.basename(f) for f in _mem_files_to_use]}")
@@ -475,7 +548,7 @@ NEVER use `npx skills`. Use `skills` directly. When installing: `HOME={actual_wo
 Always use `write_file` to workspace then `propose_skill_save` / `propose_tool_save`.
 """
     GENERAL_PURPOSE_SUBAGENT["system_prompt"] = DEFAULT_SUBAGENT_PROMPT + _subagent_policy
-
+    
     agent = create_deep_agent(**agent_kwargs)
 
     GENERAL_PURPOSE_SUBAGENT["system_prompt"] = DEFAULT_SUBAGENT_PROMPT
