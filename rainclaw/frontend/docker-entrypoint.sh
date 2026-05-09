@@ -5,3 +5,4 @@ envsubst '${BACKEND_URL} ${TASK_SERVICE_URL}' < /etc/nginx/nginx.conf.template >
 
 # Start nginx
 nginx -g "daemon off;"
+
