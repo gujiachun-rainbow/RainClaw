@@ -52,7 +52,11 @@
         <template #im>
           <IMSystemSettings :is-admin="isAdmin" @navigate-to-binding="navigateToBinding" />
         </template>
-        
+
+        <template #admin-memory>
+          <AdminMemorySettings />
+        </template>
+
       </SettingsTabs>
       
     </DialogContent>
@@ -61,7 +65,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { UserRound, Settings2, Box, ListTodo, Brain, Bell, BarChart3, Bot } from 'lucide-vue-next'
+import { UserRound, Settings2, Box, ListTodo, Brain, Bell, BarChart3, Bot, Database } from 'lucide-vue-next'
 import {
   Dialog,
   DialogContent,
@@ -76,6 +80,7 @@ import ProfileSettings from './ProfileSettings.vue'
 import ModelSettings from './ModelSettings.vue'
 import TaskSettings from './TaskSettings.vue'
 import PersonalizationSettings from './PersonalizationSettings.vue'
+import AdminMemorySettings from './AdminMemorySettings.vue'
 import NotificationSettings from './NotificationSettings.vue'
 import TokenStatistics from './TokenStatistics.vue'
 import LarkBindingSettings from './LarkBindingSettings.vue'
@@ -132,8 +137,15 @@ const tabs = computed<TabItem[]>(() => {
       id: 'im',
       label: 'IM',
       icon: Bot
-    }
+    },
   ]
+  if (isAdmin.value) {
+    baseTabs.push({
+      id: 'admin-memory',
+      label: 'Admin Memory',
+      icon: Database,
+    })
+  }
   return baseTabs
 })
 

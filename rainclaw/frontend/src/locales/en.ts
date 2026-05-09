@@ -263,6 +263,9 @@ export default {
   'Are you sure you want to delete the tool "{name}"?': 'Are you sure you want to delete the tool "{name}"?',
   // Personalization
   'Personalization': 'Memory',
+  'Admin Memory': 'System Memory',
+  'Admin Memory Desc Title': 'System Memory',
+  'Admin Memory Desc': 'Admin-managed global structured memory applied to all users. Organized by category and automatically loaded by the agent during conversations.',
   'Memory Desc Title': 'Agent Memory',
   'Memory Desc': 'This is the agent\'s cross-session memory. It remembers your preferences, habits, and common patterns across all conversations. The agent updates it automatically, but you can also edit it manually.',
   'Memory Content': 'Memory Content',
@@ -274,6 +277,12 @@ export default {
   'Memory saved': 'Memory saved',
   'Failed to load memory': 'Failed to load memory',
   'Failed to save memory': 'Failed to save memory',
+  'Entry created': 'Entry created',
+  'Entry saved': 'Entry saved',
+  'Entry deleted': 'Entry deleted',
+  'Failed to create entry': 'Failed to create entry',
+  'Failed to save entry': 'Failed to save entry',
+  'Failed to delete entry': 'Failed to delete entry',
   // Task Settings
   'Tasks': 'Tasks',
   'Timeout': 'Timeout',

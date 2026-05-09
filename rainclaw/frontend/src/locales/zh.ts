@@ -328,6 +328,9 @@ export default {
   'Are you sure you want to delete the tool "{name}"?': '确定要删除工具「{name}」吗？',
   // Personalization
   'Personalization': '记忆',
+  'Admin Memory': '系统记忆',
+  'Admin Memory Desc Title': '系统记忆管理',
+  'Admin Memory Desc': '管理员维护的全局结构化记忆，适用于所有用户。按分类管理，Agent 会在对话中自动加载这些内容。',
   'Memory Desc Title': 'Agent 记忆',
   'Memory Desc': '这是 Agent 的跨会话记忆，它会记住你的偏好、习惯和常用模式。Agent 会在对话中自动更新此内容，你也可以手动编辑。',
   'Memory Content': '记忆内容',
@@ -339,6 +342,12 @@ export default {
   'Memory saved': '记忆已保存',
   'Failed to load memory': '加载记忆失败',
   'Failed to save memory': '保存记忆失败',
+  'Entry created': '条目已创建',
+  'Entry saved': '条目已保存',
+  'Entry deleted': '条目已删除',
+  'Failed to create entry': '创建条目失败',
+  'Failed to save entry': '保存条目失败',
+  'Failed to delete entry': '删除条目失败',
   // Task Settings
   'Tasks': '任务',
   'Timeout': '超时设置',

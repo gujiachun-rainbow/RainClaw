@@ -63,6 +63,11 @@ class MongoDB:
         await cls.db.session_events.create_index("session_id")
         await cls.db.session_events.create_index([("timestamp", 1)])
 
+        # Memory entries collection (admin global memory)
+        await cls.db.memory_entries.create_index("scope")
+        await cls.db.memory_entries.create_index("category")
+        await cls.db.memory_entries.create_index([("updated_at", -1)])
+
         # Blocked skills collection
         await cls.db.blocked_skills.create_index(
             [("user_id", 1), ("skill_name", 1)], unique=True
