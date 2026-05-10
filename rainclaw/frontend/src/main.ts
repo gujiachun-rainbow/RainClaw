@@ -18,6 +18,7 @@ import ToolsPage from './pages/ToolsPage.vue'
 import ToolDetailPage from './pages/ToolDetailPage.vue'
 import ScienceToolDetail from './pages/ScienceToolDetail.vue'
 import TasksPage from './pages/TasksPage.vue'
+import DatasourcesPage from './pages/DatasourcesPage.vue'
 import LoginPage from './pages/LoginPage.vue'
 import MainLayout from './pages/MainLayout.vue'
 // import { configure } from "vue-gtag";
@@ -76,6 +77,11 @@ export const router = createRouter({
         {
           path: 'tasks',
           component: TasksPage,
+          meta: { requiresAuth: true }
+        },
+        {
+          path: 'datasources',
+          component: DatasourcesPage,
           meta: { requiresAuth: true }
         }
       ]

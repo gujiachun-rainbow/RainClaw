@@ -20,15 +20,15 @@ description: "电商数据分析（商品/订单/用户三表分析）。当用�
 
 **数据源类型**：仅支持 PostgreSQL 数据库
 
-**数据源配置**：PostgreSQL 连接信息通过动态变量从 agent 记忆中获取。动态变量格式如下：
+**数据源配置**：PostgreSQL 连接信息通过工具`get_datasource_by_code("product_order_users")`根据场景编码code为product_order_users获取数据源信息。动态变量格式如下：
 
 ```json
 {
-  "postgresql_host": "数据库主机地址",
-  "postgresql_port": 5432,
-  "postgresql_database": "数据库名",
-  "postgresql_user": "用户名",
-  "postgresql_password": "密码"
+  "host": "数据库主机地址",
+  "port": "端口",
+  "database": "数据库名",
+  "username": "用户名",
+  "password": "密码"
 }
 ```
 
@@ -243,11 +243,11 @@ from datetime import datetime
 
 def analyze():
     conn = psycopg2.connect(
-        host=postgres_host,
-        port=postgres_port,
-        user=postgres_user,
-        password=postgres_password,
-        dbname=postgres_database
+        host=host,
+        port=port,
+        user=username,
+        password=password,
+        dbname=database
     )
     
     cursor = conn.cursor()
@@ -375,11 +375,11 @@ pip install psycopg2-binary  # PostgreSQL 驱动
 
 ### 环境变量配置
 ```bash
-export POSTGRESQL_HOST=数据库地址
-export POSTGRESQL_PORT=5432
-export POSTGRESQL_USER=用户名
-export POSTGRESQL_PASSWORD=密码
-export POSTGRESQL_DATABASE=数据库名
+export HOST=数据库地址
+export PORT=端口
+export USERNAME=用户名
+export PASSWORD=密码
+export DATABASE=数据库名
 ```
 
 ## 技能使用示例

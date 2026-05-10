@@ -90,6 +90,9 @@ class MongoDB:
             expireAfterSeconds=86400
         )
 
+        # Datasources collection
+        await cls.db.datasources.create_index("code", unique=True)
+
     @classmethod
     def get_collection(cls, collection_name: str):
         if cls.db is None:

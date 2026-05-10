@@ -50,6 +50,18 @@
         <div v-if="isTasksActive" class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-gradient-to-b from-sky-300 to-teal-400 rounded-r-full"></div>
       </button>
 
+      <!-- Datasources Tab (admin only) -->
+      <button v-if="isAdmin" @click="handleDatasourcesTabClick"
+        class="nav-btn size-10 rounded-xl flex items-center justify-center transition-all duration-250 group relative"
+        :class="isDatasourcesActive
+          ? 'bg-gradient-to-br from-teal-400 to-emerald-600 text-white shadow-md shadow-emerald-500/25'
+          : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300'"
+        :title="t('Datasources')"
+      >
+        <Database :size="19" :stroke-width="isDatasourcesActive ? 2.5 : 1.8" />
+        <div v-if="isDatasourcesActive" class="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-gradient-to-b from-teal-300 to-emerald-400 rounded-r-full"></div>
+      </button>
+
       <!-- Spacer -->
       <div class="flex-1"></div>
 
@@ -231,7 +243,7 @@
 <script setup lang="ts">
 import {
   Plus, Command, MessageSquareDashed, Blocks, MessageSquare,
-  Wrench, CalendarClock, Settings2, Search, X, ChevronRight, Pin,
+  Wrench, CalendarClock, Database, Settings2, Search, X, ChevronRight, Pin,
   Play
 } from 'lucide-vue-next';
 import SessionItem from './SessionItem.vue';
@@ -255,7 +267,7 @@ const { isLeftPanelShow, toggleLeftPanel } = useLeftPanel()
 const { setOnSessionTitleUpdate } = useSessionListUpdate()
 const { onSessionCreated, onSessionUpdated } = useSessionNotifications()
 const { openSettingsDialog } = useSettingsDialog()
-const { currentUser } = useAuth()
+const { currentUser, isAdmin } = useAuth()
 
 const showUserMenu = ref(false)
 let avatarLeaveTimer: ReturnType<typeof setTimeout> | null = null
@@ -310,10 +322,11 @@ const filterTabs = computed(() => [
 ])
 
 // Navigation State
-const isChatActive = computed(() => route.path === '/' || route.path.startsWith('/chat/session') || (route.path.startsWith('/chat') && !route.path.includes('skills') && !route.path.includes('tools') && !route.path.startsWith('/chat/tasks')))
+const isChatActive = computed(() => route.path === '/' || route.path.startsWith('/chat/session') || (route.path.startsWith('/chat') && !route.path.includes('skills') && !route.path.includes('tools') && !route.path.startsWith('/chat/tasks') && !route.path.startsWith('/chat/datasources')))
 const isSkillsActive = computed(() => route.path.includes('/chat/skills'))
 const isToolsActive = computed(() => route.path.includes('/chat/tools') && !route.path.startsWith('/chat/tasks'))
 const isTasksActive = computed(() => route.path.startsWith('/chat/tasks'))
+const isDatasourcesActive = computed(() => route.path.startsWith('/chat/datasources'))
 
 const handleChatTabClick = () => {
   if (isChatActive.value && isLeftPanelShow.value) {
@@ -350,6 +363,13 @@ const handleTasksTabClick = () => {
   }
   router.push('/chat/tasks')
   fetchScheduledTasks()
+}
+
+const handleDatasourcesTabClick = () => {
+  if (isLeftPanelShow.value) {
+    toggleLeftPanel()
+  }
+  router.push('/chat/datasources')
 }
 
 const handleNewScheduledTaskClick = () => {

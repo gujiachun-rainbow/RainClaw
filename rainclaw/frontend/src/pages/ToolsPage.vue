@@ -13,7 +13,7 @@
               </span>
               Tools Library
             </h1>
-            <p class="text-white/60 text-xs mt-1">{{ activeTab === 'science' ? `${scienceToolsTotal} scientific tools across ${scienceCategories.length} categories` : `${externalTools.length} external tools installed` }}</p>
+            <p class="text-white/60 text-xs mt-1">{{ activeTab === 'science' ? `${scienceToolsTotal} builtin tools across ${scienceCategories.length} categories` : `${externalTools.length} external tools installed` }}</p>
           </div>
           <div class="flex items-center gap-3">
             <!-- Tab 切换 -->
@@ -35,7 +35,7 @@
               <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 size-4 group-focus-within:text-white/70 transition-colors" />
               <input 
                 v-model="searchQuery" type="text" 
-                :placeholder="activeTab === 'science' ? 'Search scientific tools...' : 'Search tools...'" 
+                :placeholder="activeTab === 'science' ? 'Search builtin tools...' : 'Search tools...'" 
                 class="w-64 bg-white/10 backdrop-blur-sm border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:bg-white/15 focus:border-white/25 focus:ring-1 focus:ring-white/20 transition-all duration-200"
                 @input="onSearchInput"
               >
@@ -246,7 +246,7 @@ const { t, locale } = useI18n();
 const router = useRouter();
 
 const tabs = computed(() => [
-  { id: 'science', label: 'Science', count: scienceToolsTotal.value },
+  { id: 'science', label: 'Builtin', count: scienceToolsTotal.value },
   { id: 'external', label: 'External', count: externalTools.value.length },
 ]);
 const activeTab = ref('science');

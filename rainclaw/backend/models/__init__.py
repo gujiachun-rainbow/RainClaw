@@ -8,6 +8,8 @@ from loguru import logger
 from backend.mongodb.db import db
 from backend.config import settings
 
+from backend.models.datasource import Datasource, DatasourceCreate, DatasourceUpdate, DbType
+
 class ModelConfig(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str = Field(..., description="Display Name")
@@ -103,7 +105,7 @@ async def list_user_models(user_id: str) -> List[ModelConfig]:
             {"user_id": user_id}
         ]
     }).sort("created_at", -1)
-    
+
     models = []
     async for doc in cursor:
         doc["id"] = doc["_id"]

@@ -28,12 +28,15 @@ import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+from langchain_core.tools import StructuredTool, create_schema_from_function
 from loguru import logger
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend
 from deepagents.middleware.subagents import GENERAL_PURPOSE_SUBAGENT, DEFAULT_SUBAGENT_PROMPT
+from pydantic import BaseModel, Field
 from backend.deepagent.engine import get_llm_model
 from backend.deepagent.tools import web_search, web_crawl, propose_skill_save, propose_tool_save, eval_skill, grade_eval
+from backend.deepagent.builtin_tools import get_datasource_by_code
 from backend.deepagent.full_sandbox_backend import FullSandboxBackend
 from backend.deepagent.filtered_backend import FilteredFilesystemBackend
 from backend.deepagent.sse_middleware import SSEMonitoringMiddleware
@@ -233,10 +236,11 @@ def _get_eval_system_prompt(workspace_dir: str, sandbox_env: str | None = None) 
 
 _STATIC_TOOLS = [
     web_search, web_crawl, propose_skill_save, propose_tool_save,
-    eval_skill, grade_eval,
+    eval_skill, grade_eval
 ]
 
-
+class DatasourceCodeInput(BaseModel):
+    code: str = Field(description="场景编码code，如 'ship'")
 def _collect_tools(blocked_tools: Set[str] | None = None) -> List:
     """合并内置工具与外部扩展工具，去重并过滤屏蔽项。
 
@@ -253,6 +257,15 @@ def _collect_tools(blocked_tools: Set[str] | None = None) -> List:
         except Exception:
             logger.warning("[Agent] 动态加载外部工具失败", exc_info=True)
 
+
+    sturcted_tool = StructuredTool.from_function(
+        name="get_datasource_by_code",
+        coroutine=get_datasource_by_code,
+        func=None,
+        args_schema=DatasourceCodeInput,
+        description="这个工具是用来获取数据源信息的，根据场景编码code获取数据源信息。",
+    )
+
     for t in _STATIC_TOOLS + ext_tools:
         if t.name in blocked:
             logger.info(f"[Agent] 工具已屏蔽，跳过: {t.name}")
@@ -262,6 +275,10 @@ def _collect_tools(blocked_tools: Set[str] | None = None) -> List:
             seen_names.add(t.name)
         else:
             logger.warning(f"[Agent] 工具名称重复，跳过: {t.name}")
+
+    all_tools.append(sturcted_tool)
+    seen_names.add(sturcted_tool.name)
+
     logger.info(f"[Agent] 自定义工具列表({len(all_tools)}): {[t.name for t in all_tools]}")
     return all_tools
 

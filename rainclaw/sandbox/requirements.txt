@@ -23,3 +23,10 @@ pandas
 seaborn
 openpyxl
 markitdown[pptx]
+
+# ── datasource 依赖 skill ───────────────────────────────────────────────────────
+psycopg2-binary
+pymysql
+oracledb
+pyodbc
+pymongo

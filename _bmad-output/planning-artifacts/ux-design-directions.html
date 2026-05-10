@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RainClaw - 数据源配置 页面布局示意</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; }
+  .app-layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 220px; background: #1a1a2e; color: #fff; padding: 20px 0; flex-shrink: 0; }
+  .sidebar-logo { padding: 0 20px 24px; font-size: 18px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; }
+  .sidebar-item { padding: 10px 20px; cursor: default; font-size: 14px; color: rgba(255,255,255,0.6); }
+  .sidebar-item.active { background: rgba(255,255,255,0.1); color: #fff; border-right: 3px solid #4fc3f7; }
+  .content { flex: 1; padding: 24px; position: relative; }
+
+  /* 页面标题 */
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .page-header h1 { font-size: 22px; font-weight: 600; }
+  .btn { padding: 8px 18px; border-radius: 6px; border: none; cursor: default; font-size: 14px; }
+  .btn-primary { background: #4fc3f7; color: #fff; }
+
+  /* 查询 + 标签筛选条 */
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .toolbar-left { display: flex; gap: 8px; align-items: center; }
+  .toolbar-right { display: flex; gap: 8px; align-items: center; }
+  .search-input { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; width: 200px; }
+  .filter-tag { padding: 4px 12px; border-radius: 12px; background: #e0e0e0; font-size: 12px; cursor: default; }
+  .filter-tag.active { background: #4fc3f7; color: #fff; }
+
+  /* 表格 */
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  th, td { padding: 10px 14px; text-align: left; font-size: 13px; }
+  th { background: #fafafa; color: #666; font-weight: 500; border-bottom: 1px solid #eee; }
+  td { border-bottom: 1px solid #f5f5f5; }
+  .db-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+  .db-mysql { background: #e8f5e9; color: #2e7d32; }
+  .db-pg { background: #e3f2fd; color: #1565c0; }
+  .db-oracle { background: #fce4ec; color: #c62828; }
+  .db-mongo { background: #e8f5e9; color: #2e7d32; }
+  .db-mssql { background: #f3e5f5; color: #6a1b9a; }
+  .pw-masked { color: #999; letter-spacing: 2px; }
+  .eye-icon { cursor: default; margin-left: 4px; user-select: none; }
+  .action-link { color: #4fc3f7; cursor: default; margin-right: 10px; font-size: 13px; }
+  .action-link.danger { color: #ef5350; }
+
+  /* Modal 弹窗遮罩 */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+  .modal { background: #fff; border-radius: 10px; padding: 28px; width: 680px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+  .modal h2 { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group.full-width { grid-column: 1 / -1; }
+  .form-label { font-size: 13px; color: #666; margin-bottom: 4px; }
+  .form-input { padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
+  .form-input:disabled { background: #fafafa; color: #bbb; }
+  .form-hint { font-size: 11px; color: #999; margin-top: 2px; }
+  .form-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+  .btn-cancel { padding: 8px 18px; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: default; font-size: 14px; }
+
+  .note { margin-top: 12px; font-size: 12px; color: #999; text-align: center; }
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <!-- 左侧菜单 -->
+  <div class="sidebar">
+    <div class="sidebar-logo">RainClaw</div>
+    <div class="sidebar-item">会话管理</div>
+    <div class="sidebar-item">模型配置</div>
+    <div class="sidebar-item active">数据源配置</div>
+    <div class="sidebar-item">系统设置</div>
+  </div>
+
+  <!-- 内容区 -->
+  <div class="content">
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1>数据源配置</h1>
+      <button class="btn btn-primary">+ 新增数据源</button>
+    </div>
+
+    <!-- 查询 -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <input class="search-input" placeholder="按名称模糊查询..." disabled>
+        <button class="btn btn-primary" style="padding:6px 14px;font-size:13px;">查询</button>
+        <button class="btn-cancel" style="padding:6px 14px;font-size:13px;">重置</button>
+      </div>
+    </div>
+
+    <!-- 表格 -->
+    <table>
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>编码</th>
+          <th>类型</th>
+          <th>主机</th>
+          <th>端口</th>
+          <th>用户名</th>
+          <th>密码</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>生产订单库</td>
+          <td>prod_order</td>
+          <td><span class="db-badge db-mysql">MySQL</span></td>
+          <td>192.168.1.100</td>
+          <td>3306</td>
+          <td>root</td>
+          <td><span class="pw-masked">********</span><span class="eye-icon">👁</span></td>
+          <td>
+            <span class="action-link">编辑</span>
+            <span class="action-link danger">删除</span>
+          </td>
+        </tr>
+        <tr>
+          <td>测试用户库</td>
+          <td>test_user</td>
+          <td><span class="db-badge db-pg">PostgreSQL</span></td>
+          <td>192.168.1.200</td>
+          <td>5432</td>
+          <td>admin</td>
+          <td><span class="pw-masked">********</span><span class="eye-icon">👁</span></td>
+          <td>
+            <span class="action-link">编辑</span>
+            <span class="action-link danger">删除</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal 弹窗示意 -->
+<div class="modal-overlay">
+  <div class="modal">
+    <h2>新增数据源</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">名称</label>
+        <input class="form-input" placeholder="例如：生产订单库" disabled>
+      </div>
+      <div class="form-group">
+        <label class="form-label">编码</label>
+        <input class="form-input" placeholder="唯一标识，例如：prod_order" disabled>
+        <span class="form-hint">每个数据源的编码唯一，不可重复</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">主机</label>
+        <input class="form-input" placeholder="host 或 IP" disabled>
+      </div>
+      <div class="form-group">
+        <label class="form-label">端口</label>
+        <input class="form-input" placeholder="例如：3306" disabled>
+      </div>
+      <div class="form-group">
+        <label class="form-label">库名</label>
+        <input class="form-input" placeholder="database_name" disabled>
+      </div>
+      <div class="form-group">
+        <label class="form-label">账号</label>
+        <input class="form-input" placeholder="username" disabled>
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码</label>
+        <input class="form-input" placeholder="明文回显，编辑时无需重复填写" disabled>
+      </div>
+      <div class="form-group">
+        <label class="form-label">数据库类型</label>
+        <input class="form-input" placeholder="MySQL / PostgreSQL / Oracle / MongoDB / SQL Server" disabled>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel">取消</button>
+        <button class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="note" style="margin-top:8px;">⬆ 以上为布局示意，实际以 RainClaw 现有组件样式为准</div>
+</body>
+</html>

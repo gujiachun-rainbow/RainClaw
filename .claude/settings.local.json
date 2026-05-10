@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(find D:/ai-project/RainClaw/rainclaw -maxdepth 3 -type f -name *.py -o -name *.js -o -name *.jsx -o -name *.ts -o -name *.tsx -o -name *.vue -o -name package.json -o -name requirements.txt -o -name pyproject.toml)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''rainclaw/backend/models/__init__.py'', encoding=''utf-8''\\).read\\(\\)\\); print\\(''__init__.py: OK''\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''rainclaw/backend/models/datasource.py'', encoding=''utf-8''\\).read\\(\\)\\); print\\(''datasource.py: OK''\\)\")",
+      "Bash(python -c \":*)",
+      "Read(//dev/**)",
+      "Bash(echo \"RESOLVER_EXIT: $?\")",
+      "Bash(python -c \"compile\\(open\\(''rainclaw/backend/route/datasources.py''\\).read\\(\\), ''datasources.py'', ''exec''\\); print\\(''OK''\\)\")",
+      "Read(//d D:/ai-project/RainClaw/rainclaw/**)",
+      "Bash(npx vue-tsc:*)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''rainclaw/backend/route/datasources.py'', encoding=''utf-8''\\).read\\(\\)\\); print\\(''✅ Syntax OK''\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''rainclaw/backend/route/datasources.py'', encoding=''utf-8''\\).read\\(\\)\\); print\\(''ok''\\)\")"
+    ]
+  }
+}

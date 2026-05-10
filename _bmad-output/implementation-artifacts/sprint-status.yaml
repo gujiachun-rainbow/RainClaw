@@ -1,0 +1,40 @@
+# generated: 2026-05-09
+# last_updated: 2026-05-09
+# project: RainClaw
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: {project-root}/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+generated: "2026-05-09"
+last_updated: "2026-05-12"
+project: RainClaw
+project_key: NOKEY
+tracking_system: file-system
+story_location: "{project-root}/_bmad-output/implementation-artifacts"
+
+development_status:
+  # --- Epic 1: 数据源配置管理 ---
+  epic-1: done
+  1-1-后端数据模型与-mongodb-集合: done
+  1-2-后端-crud-api-路由: done
+  1-3-前端数据源管理页面: done
+  1-4-左侧菜单入口-国际化: done
+  epic-1-retrospective: done
